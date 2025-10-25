@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <title>購物商城 驗證信箱</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- 可換你自己的字型 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#0f1220; --panel:#161a2f; --text:#e9eef7; --muted:#b6bdd1;
+      --brand:#7c5cff; --brand2:#6ae3ff; --success:#34d399; --danger:#ff6b6b;
+      --ring:0 0 0 .16rem rgba(106,227,255,.45); --radius:16px; --shadow:0 10px 30px rgba(0,0,0,.25);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font-family:'Noto Sans TC',system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;
+      color:var(--text);
+      background:
+              radial-gradient(800px 350px at 85% 0%, rgba(106,227,255,.16), transparent 60%),
+              radial-gradient(800px 350px at 0% 10%, rgba(124,92,255,.18), transparent 60%),
+              var(--bg);
+      display:flex; align-items:center; justify-content:center; padding:20px;
+    }
+    .box{
+      width:min(420px, 92vw);
+      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:16px; padding:28px; box-shadow:var(--shadow);
+      text-align:center;
+    }
+    .title{font-size:22px; font-weight:700; margin:0 0 6px}
+    .desc{font-size:14px; color:var(--muted); margin:0 0 18px}
+    .actions{display:grid; gap:10px; margin-top:16px}
+    .btn{
+      appearance:none; border:0; outline:0; cursor:pointer;
+      padding:12px 16px; border-radius:999px; font-weight:800; font-size:16px;
+      color:#0b0f1f; background:linear-gradient(90deg, var(--brand) 0%, var(--brand2) 100%);
+      text-decoration:none; display:inline-block;
+    }
+    .btn.secondary{
+      background:transparent; color:var(--text);
+      border:1px solid rgba(255,255,255,.16);
+    }
+    .state{
+      display:flex; align-items:center; justify-content:center; gap:10px;
+      margin:12px 0 8px;
+    }
+    .state svg{width:28px; height:28px}
+    .ok{color:var(--success)} .err{color:var(--danger)} .info{color:var(--brand2)}
+
+    /* spinner */
+    .spinner{
+      width:26px; height:26px; border-radius:50%;
+      border:3px solid rgba(255,255,255,.25);
+      border-top-color:#fff; animation:spin 1s linear infinite;
+    }
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    /* 無障礙：動態訊息區 */
+    #live { position:absolute; left:-9999px; width:1px; height:1px; overflow:hidden; }
+
+    @media (prefers-color-scheme: light){
+      body{background:#f6f7fb; color:#121622}
+      .box{background:#fff; border:1px solid #e8ecf4; color:#121622}
+      .desc{color:#556}
+    }
+  </style>
+</head>
+<body>
+
+<div id="live" aria-live="polite"></div>
+
+<main class="box">
+  <div class="state info" id="stateLoading"><div class="spinner" aria-hidden="true"></div></div>
+  <div class="state ok" id="stateOk" style="display:none;">✅</div>
+  <div class="state err" id="stateErr" style="display:none;">❌</div>
+
+  <h1 class="title" id="title">驗證中…</h1>
+  <p class="desc" id="desc">請稍候，我們正在驗證您的信箱。</p>
+
+  <div class="actions" id="actions" style="display:none;">
+    <a href="login.html" class="btn">前往登入</a>
+    <a href="index.html" class="btn secondary">回到首頁</a>
+  </div>
+</main>
+
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script>
+  (function() {
+    function getPaeams(){
+      // 讀取網址參數，例如 ?email_verify_token=xxxx
+      const uri = new URL(window.location.href)
+      //這樣就能抓到=後面的v值
+      const paeamss = uri.searchParams.get("emailVerifyToken");
+      return paeamss;
+    }
+
+    // 控制頁面狀態（loading / success / error）
+    //toggle() 是 jQuery 的一個方法，用來「切換元素的顯示或隱藏狀態」。
+    // 顯示 / 隱藏不同狀態圖示
+    function set(state,title,message) {
+      $("#stateLoading").toggle(state === "loading");
+      $("#stateOk").toggle(state === "success");
+      $("#stateErr").toggle(state === "error");
+
+      // 修改標題與訊息文字
+      $("#title").text(title);
+      $("#desc").text(message);
+
+      // 當畫面顯示 loading 狀態時隱藏下方 按鈕（前往登入、回首頁）
+      $("#actions").toggle(state !== "loading");
+
+
+      // 更新無障礙區（螢幕報讀器可讀的文字）
+      $('#live').text((title||'') + ' ' + (message||''));
+    }
+
+    // 從網址取得 email 驗證 token
+    const token = getPaeams();
+
+    // 若網址沒有 token，直接顯示錯誤訊息,顯示error畫面會顯示紅色叉叉
+    if(!token){
+      set("error","驗證失敗","缺少驗證參數,請確認連結是否正確");
+      return;
+    }
+
+    // 顯示「驗證中」狀態
+    set("loading","驗證中","請稍後,我們正在驗證你的信箱");
+
+    // 使用 jQuery Ajax 呼叫後端 API 驗證信箱
+    const url = "user/verify-email";
+    $.ajax({
+      url: url,  // 後端 API 路徑
+      method: 'GET',             // 使用 GET 請求
+      dataType: 'json',          // 預期回傳 JSON 格式
+      data: { emailVerifyToken: token }, // 傳送的參數
+      success:function f(response) {
+        if(response.code===200){//後端回應200代表驗證成功,否則就失敗
+          set("success", "驗證成功", "你的信箱已完成驗證");
+        }else {
+          set("error", "驗證失敗","無效或已使用的驗證連結")
+        }
+      },
+      error:function () {
+        set("error", "驗證失敗", "系統暫時無法連線");
+      }
+    })
+  })();
+</script>
+</body>
+</html>

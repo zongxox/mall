@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mall.mapper.UserMapper">
+    <!--註冊-->
+    <insert id="saveUser">
+        INSERT INTO user(id, account, password, name, phone, email, is_admin, reset_token, reset_token_expire,
+                         email_verify_token, email_verify_token_expire, email_verified, created_time, updated_time)
+        VALUES (null, #{account}, #{password}, #{name}, #{phone}, #{email}, #{isAdmin}, #{resetToken},
+                #{resetTokenExpire}, #{emailVerifyToken}, #{emailVerifyTokenExpire}, #{emailVerified},
+                #{createdTime}, #{updatedTime})
+    </insert>
+    <!--註冊時查詢帳號是否存在-->
+    <select id="getUserByAccount" resultType="com.example.mall.entity.User">
+        SELECT account
+        FROM user
+        WHERE account = #{account}
+    </select>
+    <!--註冊時查詢email是否存在-->
+    <select id="getUserByEmail" resultType="com.example.mall.entity.User">
+        SELECT email
+        FROM user
+        WHERE email = #{email}
+    </select>
+    <!--註冊時email驗證,token是否存在及過期 及 email是否驗證過-->
+    <select id="getTokenTime" resultType="com.example.mall.entity.User">
+        SELECT email_verify_token,
+               email_verify_token_expire,
+               email_verified
+        FROM user
+        WHERE email_verify_token = #{emailVerifyToken}
+    </select>
+
+    <!--清空註冊時token跟時間-->
+    <update id="delTokenTime">
+        UPDATE user
+        SET email_verified            = true,
+            email_verify_token        = null,
+            email_verify_token_expire = null,
+            updated_time              = now()
+        WHERE email_verify_token = #{emailVerifyToken}
+    </update>
+
+    <!--登入查詢帳號密碼是否正確-->
+    <select id="selectAccountPassword" resultType="com.example.mall.entity.User">
+        SELECT id,
+               account,
+               password,
+               name,
+               phone,
+               email,
+               created_time,
+               is_admin
+        FROM user
+        WHERE account = #{account}
+          AND password = #{password}
+    </select>
+
+    <!--修改會員資料-->
+    <update id="updateUser">
+        UPDATE user
+        <set>
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="email != null and email != ''">email = #{email},</if>
+            <if test="phone != null and phone != ''">phone = #{phone},</if>
+            <if test="password != null and password != ''">password = #{password},</if>
+            updated_time = now()
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <!-- 基於用戶id查詢用戶資料-->
+    <select id="userById" resultType="com.example.mall.entity.User">
+        SELECT id,
+               account,
+               password,
+               name,
+               phone,
+               email,
+               created_time,
+               is_admin
+        FROM user
+        WHERE id = #{id}
+    </select>
+</mapper>

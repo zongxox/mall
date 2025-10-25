@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>購物商城 商品頁</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <style>
+        :root {
+            --bg: #0f1220;
+            --panel: #14182a;
+            --panel2: #171b2f;
+            --text: #e9eef7;
+            --muted: #b9c0d0;
+            --brand: #6ae3ff;
+            --brand2: #7c5cff;
+            --ring: 0 0 0 .14rem rgba(106, 227, 255, .35);
+            --radius: 14px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0 }
+        body {
+            font-family: Arial, "Noto Sans TC", sans-serif;
+            background: linear-gradient(180deg, rgba(20, 24, 42, .88), rgba(20, 24, 42, .6));
+            color: var(--text)
+        }
+        a { color: inherit; text-decoration: none }
+        img { display: block; max-width: 100% }
+
+        /* =====（已移除 Header 相關 CSS，改由 header.html 提供）===== */
+
+        /* ===== 商品內容 ===== */
+        .container { width: 1200px; margin: 32px auto }
+        .product {
+            display: grid;
+            grid-template-columns:560px 1fr;
+            gap: 28px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, .05), rgba(255, 255, 255, .03));
+            border: 1px solid rgba(255, 255, 255, .08);
+            border-radius: var(--radius);
+            padding: 22px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, .35);
+        }
+
+        /* 圖片區 */
+        .gallery {
+            display: block;
+            background: var(--panel);
+            border-radius: 12px;
+            padding: 12px;
+            border: 1px solid rgba(255, 255, 255, .08);
+        }
+        .stage {
+            position: relative;
+            height: 520px;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, .10);
+            background: #0f1426;
+            padding: 0;
+        }
+        .stage picture { position: absolute; inset: 0; width: 100%; height: 100%; }
+        .stage picture img {
+            width: 100%; height: 100%; object-fit: cover; display: block; border-radius: 0;
+        }
+
+        /* 商品資訊 */
+        .info { padding: 8px 6px }
+        .title { font-size: 28px; font-weight: 800 }
+        .sub { color: var(--muted); margin-top: 8px }
+        .price {
+            margin-top: 16px; font-size: 26px; font-weight: 800;
+            background: linear-gradient(135deg, var(--brand), var(--brand2));
+            -webkit-background-clip: text; color: transparent
+        }
+        .divider { height: 1px; background: rgba(255, 255, 255, .08); margin: 18px 0 }
+        .block { margin-bottom: 16px }
+        .block h4 { font-size: 14px; color: #dfe6f7; margin-bottom: 8px }
+
+        /* 顏色 */
+        .swatches { display: flex; gap: 10px }
+        .swatches input { display: none }
+        .swatches label {
+            width: 32px; height: 32px; border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, .25); cursor: pointer
+        }
+        .swatches input:checked + label { outline: 3px solid rgba(106, 227, 255, .55); outline-offset: 2px }
+        .swatch-black { background: #111 }
+        .swatch-white { background: #f6f6f8 }
+        .swatch-blue { background: #6aa9ff }
+        .swatch-green { background: #65c59e }
+        .swatch-pink { background: #f8b7d0 }
+
+        /* 尺寸 */
+        .sizes { display: grid; grid-template-columns:repeat(5, 60px); gap: 10px }
+        .sizes input { display: none }
+        .sizes label {
+            display: grid; place-items: center; height: 40px; border-radius: 10px; cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, .12); background: var(--panel2); color: #e9eef7; font-weight: 700
+        }
+        .sizes input:checked + label { border-color: rgba(106, 227, 255, .75); box-shadow: var(--ring) }
+        .sizes input:disabled + label { opacity: .4; text-decoration: line-through; cursor: not-allowed }
+
+        /* 數量控制 */
+        .row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap }
+        .qty {
+            display: flex; align-items: center; gap: 8px; background: var(--panel2);
+            padding: 8px 10px; border: 1px solid rgba(255, 255, 255, .12);
+            border-radius: 12px; width: 180px; justify-content: space-between
+        }
+        .qty span { font-weight: 700 }
+        .num-control { display: flex; align-items: center; gap: 6px }
+        .btn-num {
+            width: 30px; height: 30px; border-radius: 8px; background: #1b2540;
+            border: 1px solid rgba(255, 255, 255, .18); color: #fff; font-size: 18px; cursor: pointer; font-weight: bold
+        }
+        .btn-num:hover { background: linear-gradient(135deg, var(--brand), var(--brand2)); color: #0b0e18 }
+        .qty input {
+            width: 50px; text-align: center; background: transparent; border: none; color: #fff; font-size: 16px; outline: none;
+            -moz-appearance: textfield
+        }
+        .qty input::-webkit-inner-spin-button, .qty input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0 }
+
+        .notes { margin-top: 14px; color: var(--muted); font-size: 13px; line-height: 1.6 }
+
+        .more { margin-top: 26px; display: grid; grid-template-columns:1fr 1fr; gap: 18px }
+        .more img {
+            width: 640px; height: 640px; object-fit: cover;
+            border-radius: 12px; border: 1px solid rgba(255, 255, 255, .08); display: block;
+        }
+
+        /* 產品頁專用：購物車主按鈕樣式（保留） */
+        .btn-cart {
+            background: linear-gradient(135deg, #6ae3ff, #34d399);
+            color: #0b0e18; font-weight: 800; border: none
+        }
+        .btn-cart:hover { opacity: .9 }
+    </style>
+
+</head>
+<body>
+
+<!-- 掛載點：載入 header.html（含 Header 的 CSS + HTML + 事件） -->
+<div id="site-header"></div>
+
+<div class="container">
+    <div class="product">
+
+        <!-- 圖片區 -->
+        <section class="gallery">
+            <div class="stage">
+                <picture class="img-main">
+                    <img src="" alt="商品圖片">
+                </picture>
+            </div>
+        </section>
+
+        <!-- 商品資訊 -->
+        <section class="info"><h1 class="title"></h1>
+            <p class="sub"></p>
+            <div class="price"></div>
+
+            <div class="divider"></div>
+
+            <!-- 顏色 -->
+            <div class="block">
+                <h4>顏色</h4>
+                <div class="swatches">
+                    <input type="radio" name="color" id="c-black" value="black" checked>
+                    <label for="c-black" class="swatch-black" title="黑色"></label>
+
+                    <input type="radio" name="color" id="c-white" value="white">
+                    <label for="c-white" class="swatch-white" title="白色"></label>
+
+                    <input type="radio" name="color" id="c-pink" value="pink">
+                    <label for="c-pink" class="swatch-pink" title="粉色"></label>
+                </div>
+            </div>
+
+            <!-- 尺寸 -->
+            <div class="block">
+                <h4>尺寸</h4>
+                <div class="sizes">
+                    <input type="radio" name="size" id="s-xs" value="44"><label for="s-xs">44</label>
+                    <input type="radio" name="size" id="s-s" value="45" checked> <label for="s-s">45</label>
+                </div>
+            </div>
+
+            <!-- 數量與按鈕 -->
+            <div class="block">
+                <div class="row" style="gap:16px;">
+                    <div class="qty">
+                        <span>數量</span>
+                        <div class="num-control">
+                            <button type="button" class="btn-num" id="minus">−</button>
+                            <span id="qty-display">1</span>
+                            <button type="button" class="btn-num" id="plus">＋</button>
+                        </div>
+                    </div>
+                    <div class="cart-actions" style="display:flex; gap:10px; flex-wrap:wrap;">
+                        <button id="addToCart" class="btn btn-cart">加入購物車</button>
+                        <button id="buyNow" class="btn primary">立即購買</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="msg-box" style="display:none; color:#ef6c00; font-weight:bold;"></div>
+            <p class="notes">出貨說明：工作日 24 小時內出貨（例假日順延）。</p></section>
+    </div>
+    <!-- 穿搭示意 -->
+    <section class="more">
+        <img src="" id="img1" alt="穿搭示意 1">
+        <img src="" id="img2" alt="穿搭示意 2">
+    </section>
+
+</div>
+
+<script>
+    //Header
+    $("#site-header").load("header.html");
+
+    $(function (e) {
+        let qty = 1;
+        $("#plus").on("click", function () {
+            qty++;
+            $("#qty-display").text(qty);
+        });
+
+        $("#minus").on("click", function () {
+            if (qty > 0) qty--;
+            $("#qty-display").text(qty);
+        });
+    });
+
+    $(function () {
+        let params = new URLSearchParams(window.location.search);//取得網址上參數方法
+        let productID = params.get("id");//抓取網址上的k,v值 id=xx
+        if (!productID) {//判斷從首頁跳轉到網址是否有代商品id
+            alert("找不到商品!!")
+            return;
+        }
+        //AJAX請求
+        const url = "/products/" + productID;
+        $.ajax({
+            url: url,
+            type: "GET",
+            dataType: "json",
+            success: function (response) {
+                if (response.code === 200) {
+                    //取得後端查詢到的數據
+                    const p = response.data;
+                    $(".title").text(p.name);
+                    $(".sub").text(p.description);
+                    $(".price").text(p.price);
+                    $(".img-main img").attr("src", p.imageUrl);
+                    $("#img1").attr("src", p.imageUrl2);
+                    $("#img2").attr("src", p.imageUrl3);
+
+                    //點擊顏色按鈕後執行,重新給庫存值
+                    $("#c-black, #c-white, #c-pink").on("change", function () {
+                        const variants = p.variants;//先從後端傳過來的商品productId,顏色,尺寸,庫存資訊
+                        var selectColor;
+                        //取得屬性id .attr()是jQuery寫法 = js 的getAttribute()
+                        //$() 將抓到的id丟到裡面
+                        if ($(this).attr("id") === "c-black") {
+                            selectColor = "黑色";
+                        } else if ($(this).attr("id") === "c-white") {
+                            selectColor = "白色";
+                        } else if ($(this).attr("id") === "c-pink") {
+                            selectColor = "粉色";
+                        }
+
+                        //先清空舊的庫存
+                        $("#s-xs").removeData("stock");
+                        $("#s-s").removeData("stock");
+
+                        //只綁目前這個顏色的尺寸庫存
+                        variants.forEach(v => {
+                            if (v.color === selectColor && v.size === 44) {
+                                $("#s-xs").data("stock", v.stock);
+                            } else if (v.color === selectColor && v.size === 45) {
+                                $("#s-s").data("stock", v.stock);
+                            }
+                        });
+
+                        //除錯印出結果
+                        console.log(`[${selectColor}] 綁定結果 → 44=${$("#s-xs").data("stock")}  45=${$("#s-s").data("stock")}`);
+                    });
+
+
+
+                    ///點擊顏色時,判斷綁定的顏色是否庫存為0,為0時將數量,購買,加入購物車,隱藏
+                    //用change再重複點了同一科按鈕後就不會一只跳出目前沒有這個顏色或庫存及尺寸!!
+                    //除非按別的按鈕在按回來,才會再跳出,目前沒有這個顏色或庫存及尺寸!!
+                    //用click如果再重複點同一科按紐,就會在跳出,目前沒有這個顏色或庫存及尺寸!!
+                    $("#s-xs,#s-s").on("change", function () {
+                        //除錯印出結果
+                        console.log(`最終 data 狀態：44=`, $("#s-xs").data("stock"), " 45=", $("#s-s").data("stock"));
+                        const stock = $(this).data("stock");
+                        if (stock === undefined || stock === 0) {//將上面綁定的庫存變成物件進行判斷
+                            $("#plus, #minus, #addToCart, #buyNow").hide();
+                            $("#msg-box").text("目前沒有這個顏色或庫存及尺寸!!").show();
+                            let qty = 0;
+                            $("#qty-display").text(0)
+                        } else {
+                            $("#plus, #minus, #addToCart, #buyNow").show();
+                            $("#msg-box").hide();
+                            let qty = 1;
+                            $("#qty-display").text(1)
+                        }
+                    });
+
+                } else {
+                    alert("查無商品" + response.msg);
+                }
+            },
+            error: function (xhr) {
+                alert("系統錯誤！");
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

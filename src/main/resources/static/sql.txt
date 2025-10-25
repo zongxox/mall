@@ -1,0 +1,265 @@
+-- 建立 Shopping 資料庫
+CREATE DATABASE Mall;
+
+-- 使用 Shopping 資料庫
+USE Mall;
+
+-- 建立 user 表
+CREATE TABLE user (
+    id INT AUTO_INCREMENT PRIMARY KEY,                      -- 使用者 ID，自動遞增
+    account VARCHAR(50) NOT NULL UNIQUE,                    -- 使用者帳號，不可重複
+    password VARCHAR(100) NOT NULL,                         -- 密碼（建議後端使用 bcrypt 加密）
+    name VARCHAR(100) NOT NULL,                             -- 使用者姓名
+    phone VARCHAR(20),                                      -- 電話號碼（可選填）
+    email VARCHAR(100) NOT NULL UNIQUE,                     -- 電子信箱，唯一並必填
+    is_admin TINYINT(1) DEFAULT 0,                          -- 是否為管理員（0 = 否，1 = 是）
+
+    reset_token VARCHAR(255),                               -- 忘記密碼的重設 token
+    reset_token_expire DATETIME,                            -- 重設密碼的 token 過期時間
+
+    email_verify_token VARCHAR(255),                        -- 註冊時寄出的 email 驗證 token
+    email_verify_token_expire DATETIME,                     -- 驗證信的 token 過期時間（例如 30 分鐘）
+    email_verified TINYINT(1) DEFAULT 0,                    -- 是否完成 email 驗證（0 = 否，1 = 是）
+
+    created_time DATETIME DEFAULT CURRENT_TIMESTAMP,        -- 帳號建立時間
+    updated_time DATETIME DEFAULT CURRENT_TIMESTAMP
+                   ON UPDATE CURRENT_TIMESTAMP              -- 最後更新時間
+);
+
+
+CREATE TABLE admin (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    account VARCHAR(100) NOT NULL UNIQUE,  -- 新增帳號欄位並加上唯一約束
+    password VARCHAR(100) NOT NULL,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(100),
+    phone VARCHAR(20),
+    is_admin TINYINT(1) DEFAULT 0,
+    created_time DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_time DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+INSERT INTO admin (account, password, name, email, phone, is_admin)
+VALUES ('admin', 'admin', 'admin', 'admin@gmail.com', '12345678', 1);
+
+
+-- 建立 products 商品主表
+CREATE TABLE IF NOT EXISTS products (
+    id INT AUTO_INCREMENT PRIMARY KEY COMMENT '商品ID',
+    name VARCHAR(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '商品名稱',
+    description TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci COMMENT '商品描述',
+    price INT NOT NULL COMMENT '商品價格（單位：元，整數）',
+    image_url VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci COMMENT '商品主圖片連結',
+    image_url2 VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci COMMENT '商品副圖片連結',
+    image_url3 VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci COMMENT '商品副圖片連結',
+    created_time DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '建立時間',
+    updated_time DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新時間'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- 插入商品資料
+INSERT INTO products (name, description, price, image_url,image_url2,image_url3)
+VALUES (
+  'adidas 愛迪達 DURAMO RC 精選運動鞋 跑鞋 慢跑鞋 男鞋',
+  '精選運動鞋 跑鞋',
+  790,
+  '/images/boy1-1.jpg',
+  '/images/boy1-2.jpg',
+  '/images/boy1-3.jpg'
+);
+
+INSERT INTO products (name, description, price, image_url,image_url2,image_url3)
+VALUES (
+  'adidas 愛迪達 RUN 70S 2.0 休閒鞋 運動鞋',
+  '精選運動鞋 跑鞋',
+  700,
+  '/images/boy2-1.jpg',
+  '/images/boy2-2.jpg',
+  '/images/boy2-3.jpg'
+);
+
+INSERT INTO products (name, description, price, image_url,image_url2,image_url3)
+VALUES (
+  '官方旗艦 Enzo 2 慢跑運動鞋 男性',
+  '精選運動鞋 跑鞋',
+  850,
+  '/images/boy3-1.jpg',
+  '/images/boy3-2.jpg',
+  '/images/boy3-3.jpg'
+);
+
+INSERT INTO products (name, description, price, image_url,image_url2,image_url3)
+VALUES (
+  'DESCENTE 迪桑特 CHRON RACER 男士 潮流休閒鞋(黑色灰色)',
+  '精選運動鞋 跑鞋',
+  900,
+  '/images/boy4-1.jpg',
+  '/images/boy4-2.jpg',
+  '/images/boy4-3.jpg'
+);
+
+INSERT INTO products (name, description, price, image_url,image_url2,image_url3)
+VALUES (
+  'asics 亞瑟士 JOLT 5 一般楦 寬楦 超寬楦 跑鞋 運動鞋(多款任選)',
+  '精選運動鞋 跑鞋',
+  1000,
+  '/images/boy5-1.jpg',
+  '/images/boy5-2.jpg',
+  '/images/boy5-3.jpg'
+);
+
+INSERT INTO products (name, description, price, image_url,image_url2,image_url3)
+VALUES (
+  'UMA官方旗艦 Retaliate 3 慢跑運動鞋 男性',
+  '精選運動鞋 跑鞋',
+  1000,
+  '/images/boy6-1.jpg',
+  '/images/boy6-2.jpg',
+  '/images/boy6-3.jpg'
+);
+
+INSERT INTO products (name, description, price, image_url,image_url2,image_url3)
+VALUES (
+  'PLAYBOY 輕盈plus 透氣懶人休閒鞋 防水洞洞鞋',
+  '精選防水洞洞鞋',
+  999,
+  '/images/boy7-1.jpg',
+  '/images/boy7-2.jpg',
+  '/images/boy7-3.jpg'
+);
+
+INSERT INTO products (name, description, price, image_url,image_url2,image_url3)
+VALUES (
+  'NIKE 耐吉 慢跑鞋 男鞋 運動鞋 氣墊 緩震 AIR MAX BIA 黑',
+  '精選運動鞋 跑鞋',
+  1050,
+  '/images/boy8-1.jpg',
+  '/images/boy8-2.jpg',
+  '/images/boy8-3.jpg'
+);
+
+INSERT INTO products (name, description, price, image_url,image_url2,image_url3)
+VALUES (
+  'adidas 愛迪達 CORERACER 運動鞋 男鞋',
+  '精選運動鞋 跑鞋',
+  1050,
+  '/images/boy9-1.jpg',
+  '/images/boy9-2.jpg',
+  '/images/boy9-3.jpg'
+);
+
+-- product_variants 商品規格表（顏色、尺寸、庫存）
+CREATE TABLE product_variants (
+    id INT AUTO_INCREMENT PRIMARY KEY COMMENT '商品規格ID',
+    product_id INT NOT NULL COMMENT '對應的商品ID',
+    color VARCHAR(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '顏色',
+    size INT NOT NULL COMMENT '尺寸（數字）',
+    stock INT NOT NULL DEFAULT 0 COMMENT '庫存數量',
+    created_time DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '建立時間',
+    FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+INSERT INTO product_variants (product_id, color, size, stock)
+VALUES
+  (1, '黑色', 44, 10),
+  (1, '黑色', 45, 10),
+  (1, '白色', 44, 10),
+  (1, '白色', 45, 10);
+
+INSERT INTO product_variants (product_id, color, size, stock)
+VALUES
+  (2, '黑色', 44, 10),
+  (2, '黑色', 45, 10),
+  (2, '白色', 44, 10),
+  (2, '白色', 45, 10);
+
+INSERT INTO product_variants (product_id, color, size, stock)
+VALUES
+  (3, '黑色', 44, 10),
+  (3, '黑色', 45, 10),
+  (3, '白色', 44, 10),
+  (3, '白色', 45, 10);
+
+INSERT INTO product_variants (product_id, color, size, stock)
+VALUES
+  (4, '黑色', 44, 10),
+  (4, '黑色', 45, 10),
+  (4, '白色', 44, 10),
+  (4, '白色', 45, 10);
+
+INSERT INTO product_variants (product_id, color, size, stock)
+VALUES
+  (5, '黑色', 44, 10),
+  (5, '黑色', 45, 10),
+  (5, '白色', 44, 10),
+  (5, '白色', 45, 10);
+
+INSERT INTO product_variants (product_id, color, size, stock)
+VALUES
+  (6, '黑色', 44, 10),
+  (6, '黑色', 45, 10),
+  (6, '白色', 44, 10),
+  (6, '白色', 45, 10);
+
+INSERT INTO product_variants (product_id, color, size, stock)
+VALUES
+  (7, '粉色', 44, 10),
+  (7, '粉色', 45, 10),
+  (7, '白色', 44, 10),
+  (7, '白色', 45, 10);
+
+INSERT INTO product_variants (product_id, color, size, stock)
+VALUES
+  (8, '黑色', 44, 10),
+  (8, '黑色', 45, 10),
+  (8, '白色', 44, 10),
+  (8, '白色', 45, 10);
+
+INSERT INTO product_variants (product_id, color, size, stock)
+VALUES
+  (9, '黑色', 44, 10),
+  (9, '黑色', 45, 10),
+  (9, '白色', 44, 10),
+  (9, '白色', 45, 10);
+
+
+-- cart_items（購物車表）
+CREATE TABLE cart_items (
+    id INT AUTO_INCREMENT PRIMARY KEY COMMENT '購物車項目ID',
+    user_id INT NOT NULL COMMENT '使用者ID',
+    product_variant_id INT NOT NULL COMMENT '商品規格ID',
+    quantity INT NOT NULL DEFAULT 1 COMMENT '購買數量',
+    created_time DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '加入時間',
+
+    FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE,
+    FOREIGN KEY (product_variant_id) REFERENCES product_variants(id) ON DELETE CASCADE
+);
+
+
+
+-- orders（訂單主表）
+CREATE TABLE orders (
+    id INT AUTO_INCREMENT PRIMARY KEY COMMENT '訂單ID',
+    user_id INT NOT NULL COMMENT '訂購者ID',
+    total_amount INT NOT NULL COMMENT '總金額',
+    status VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '訂單狀態',
+    recipient_name VARCHAR(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '收件人姓名',
+    recipient_phone VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '收件人電話',
+    recipient_address VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '收件人地址',
+    created_time DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '建立時間',
+    updated_time DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最後更新時間',
+
+    FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE
+) CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT='訂單主表';
+
+
+
+
+-- order_items（訂單明細表）
+CREATE TABLE order_items (
+    id INT AUTO_INCREMENT PRIMARY KEY COMMENT '訂單項目ID',
+    order_id INT NOT NULL COMMENT '訂單ID',
+    product_variant_id INT NOT NULL COMMENT '商品規格ID',
+    quantity INT NOT NULL COMMENT '數量',
+    price INT NOT NULL COMMENT '單價（當下快照）',
+
+    FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
+    FOREIGN KEY (product_variant_id) REFERENCES product_variants(id) ON DELETE CASCADE
+) CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT='訂單明細表';

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <title>購物商城 首頁</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+  <style>
+    :root{
+      --bg:#0f1220; --panel:#14182a; --text:#e9eef7; --muted:#b9c0d0;
+      --brand:#6ae3ff; --brand2:#7c5cff; --ring:0 0 0 .14rem rgba(106,227,255,.45);
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:Arial,"Noto Sans TC",sans-serif;background:linear-gradient(180deg,rgba(20,24,42,.88),rgba(20,24,42,.6));color:var(--text)}
+    a{color:inherit;text-decoration:none} img{max-width:100%;display:block}
+    .container{width:1200px;margin:0 auto}
+
+    /*（已移除 Header 相關 CSS）*/
+
+    /*Hero輪播*/
+    .hero{position:relative;overflow:hidden;border-radius:14px;border:1px solid rgba(255,255,255,.08);
+      background:
+              radial-gradient(700px 320px at 80% 0%, rgba(106,227,255,.12), transparent 60%),
+              radial-gradient(700px 320px at 10% -10%, rgba(124,92,255,.12), transparent 60%),
+              var(--panel);
+      margin:30px auto;
+    }
+    .hero-inner{position:relative;height:420px}
+    .slides{display:flex;height:100%;transition:transform .45s ease}
+    .slide{flex:0 0 100%;display:grid;grid-template-columns:1.1fr .9fr;align-items:center;gap:20px;padding:40px}
+    .slide-copy h1{font-size:42px;margin-bottom:10px}
+    .slide-copy p{color:var(--muted);font-size:18px;margin-bottom:25px}
+    .cta{padding:12px 26px;border-radius:999px;background:linear-gradient(135deg,var(--brand),var(--brand2));color:#0b0e18;font-weight:700;border:none;cursor:pointer}
+    .slide-visual img{border-radius:12px;border:1px solid rgba(255,255,255,.08);width:100%;height:100%;object-fit:cover}
+
+    .arrow{position:absolute;top:50%;transform:translateY(-50%);width:44px;height:44px;border-radius:50%;border:1px solid rgba(255,255,255,.1);background:rgba(20,24,42,.6);color:#fff;font-size:26px;cursor:pointer}
+    .arrow.left{left:14px}.arrow.right{right:14px}
+    .dots{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);display:flex;gap:8px}
+    .dot{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.35);border:1px solid rgba(255,255,255,.4);cursor:pointer}
+    .dot.active{background:#fff}
+
+    /*商品卡*/
+    .product-section{padding:20px 0 60px}
+    .products{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+    .product-card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:12px;overflow:hidden;text-align:center;transition:transform .2s ease,border-color .2s ease}
+    .product-card:hover{transform:translateY(-5px);border-color:rgba(255,255,255,.18)}
+    .product-card .title{padding:12px;font-weight:700;color:#e7ecf7;min-height:54px;display:flex;align-items:center;justify-content:center}
+  </style>
+</head>
+
+<body>
+<!-- Header 改為外掛 -->
+<header id="site-header"></header>
+
+<!-- Hero（改為靜態 HTML，由 jQuery 控制） -->
+<section class="container hero" id="hero">
+  <div class="hero-inner">
+    <div class="slides">
+      <article class="slide">
+        <div class="slide-copy">
+          <h1>本季話題 <br><span style="color:var(--brand2)">潮流球鞋上新</span></h1>
+          <p>人氣聯名、復古跑鞋、厚底增高全到齊，百搭不踩雷。</p>
+          <a href="#products" class="cta">逛鞋款</a>
+        </div>
+        <div class="slide-visual">
+          <img src="images/boy1-1.jpg" alt="banner-1">
+        </div>
+      </article>
+
+      <article class="slide">
+        <div class="slide-copy">
+          <h1>日常好走 <br><span style="color:var(--brand)">輕量休閒鞋</span></h1>
+          <p>透氣網布與回彈中底，走久也舒適不累腳。</p>
+        </div>
+        <div class="slide-visual">
+          <img src="images/boy2-1.jpg" alt="banner-2">
+        </div>
+      </article>
+
+      <article class="slide">
+        <div class="slide-copy">
+          <h1>會員加碼 <br><span style="color:var(--brand2)">指定鞋款滿額再折</span></h1>
+          <p>加入會員享首購折扣與生日禮，經典款限時優惠。</p>
+        </div>
+        <div class="slide-visual">
+          <img src="images/boy3-1.jpg" alt="banner-3">
+        </div>
+      </article>
+    </div>
+
+    <button class="arrow left"  aria-label="上一張">‹</button>
+    <button class="arrow right" aria-label="下一張">›</button>
+
+    <div class="dots" role="tablist" aria-label="輪播頁籤">
+      <span class="dot active" data-index="0" role="tab" aria-selected="true"></span>
+      <span class="dot" data-index="1" role="tab" aria-selected="false"></span>
+      <span class="dot" data-index="2" role="tab" aria-selected="false"></span>
+    </div>
+  </div>
+</section>
+
+<!-- 商品 -->
+<section class="container product-section" id="products">
+  <div class="products">
+    <a class="product-card" href="product.html?id=1">
+      <img src="images/boy1-1.jpg" alt="adidas 愛迪達 DURAMO RC 精選運動鞋 男性跑鞋 慢跑鞋"><div class="title">adidas 愛迪達 DURAMO RC 精選運動鞋 男性跑鞋 慢跑鞋</div>
+    </a>
+    <a class="product-card" href="product.html?id=2">
+      <img src="images/boy2-1.jpg" alt="adidas 愛迪達 RUN 70S 2.0 男性休閒鞋 運動鞋 跑鞋"><div class="title">adidas 愛迪達 RUN 70S 2.0 男性休閒鞋 運動鞋 跑鞋</div>
+    </a>
+    <a class="product-card" href="product.html?id=3">
+      <img src="images/boy3-1.jpg" alt="官方旗艦 Enzo 2 男性慢跑運動鞋"><div class="title">官方旗艦 Enzo 2 男性慢跑運動鞋</div>
+    </a>
+    <a class="product-card" href="product.html?id=4">
+      <img src="images/boy4-1.jpg" alt="DESCENTE 迪桑特 CHRON RACER 男性 潮流休閒鞋"><div class="title">DESCENTE 迪桑特 CHRON RACER 男性 潮流休閒鞋</div>
+    </a>
+    <a class="product-card" href="product.html?id=5">
+      <img src="images/boy5-1.jpg" alt="asics 亞瑟士 JOLT 5 男性 跑鞋 運動鞋"><div class="title">asics 亞瑟士 JOLT 5 男性 跑鞋 運動鞋</div>
+    </a>
+    <a class="product-card" href="product.html?id=6">
+      <img src="images/boy6-1.jpg" alt="UMA官方旗艦 Retaliate 3 男性慢跑運動鞋"><div class="title">UMA官方旗艦 Retaliate 3 男性慢跑運動鞋</div>
+    </a>
+    <a class="product-card" href="product.html?id=7">
+      <img src="images/boy7-1.jpg" alt="PLAYBOY 輕盈plus 男性透氣懶人休閒鞋 防水洞洞鞋"><div class="title">PLAYBOY 輕盈plus 男性透氣懶人休閒鞋 防水洞洞鞋</div>
+    </a>
+    <a class="product-card" href="product.html?id=8">
+      <img src="images/boy8-1.jpg" alt="NIKE 耐吉 慢跑鞋 男性運動鞋 氣墊 緩震 AIR MAX BIA 黑"><div class="title">NIKE 耐吉 慢跑鞋 男性運動鞋 氣墊 緩震 AIR MAX BIA 黑</div>
+    </a>
+    <a class="product-card" href="product.html?id=9">
+      <img src="images/boy9-1.jpg" alt="adidas 愛迪達 CORERACER 運動鞋 男鞋"><div class="title">adidas 愛迪達 CORERACER 運動鞋 男鞋</div>
+    </a>
+  </div>
+</section>
+
+<script>
+  // 掛載共用 header（保留原樣）
+  $(function(){
+    $('#site-header').load('header.html');
+  });
+
+  // ====== Hero 轮播（jQuery）======
+  $(function(){
+    var $hero   = $('#hero');
+    var $slides = $hero.find('.slides');
+    var $slide  = $slides.find('.slide');
+    var $dots   = $hero.find('.dot');
+    var count   = $slide.length;
+    var index   = 0;
+    var timer   = null;
+    var interval= 4500;
+
+    function go(i){
+      index = (i + count) % count; // 修正：用 index 追蹤目前頁
+      $slides.css('transform', 'translateX(-' + (index*100) + '%)');
+      $dots.removeClass('active').attr('aria-selected','false')
+              .eq(index).addClass('active').attr('aria-selected','true');
+    }
+    function next(){ go(index+1); } // 修正：不要用未宣告的 index1
+    function prev(){ go(index-1); }
+    function play(){ stop(); timer = setInterval(next, interval); }
+    function stop(){ if(timer){ clearInterval(timer); timer=null; } }
+
+    // init
+    go(0);     // 修正：先定位到第 0 張
+    play();    // 開始自動輪播
+
+    // events
+    $hero.find('.arrow.right').on('click', next);
+    $hero.find('.arrow.left').on('click',  prev);
+    $dots.on('click', function(){ go(parseInt($(this).data('index'),10)); });
+    $hero.find('.hero-inner').on('mouseenter', stop).on('mouseleave', play);
+  });
+</script>
+
+</body>
+</html>

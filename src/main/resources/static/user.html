@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta http-equiv="Cache-Control" content="no-store"/>
+    <title>Clothique 會員中心</title>
+
+    <style>
+        :root {
+            --bg: #0f1220;
+            --panel: #14182a;
+            --panel-2: #11172d;
+            --card: #18213b;
+            --text: #e9eef7;
+            --muted: #b9c0d0;
+            --line: rgba(255, 255, 255, .09);
+            --brand: #6ae3ff;
+            --brand2: #7c5cff;
+            --danger: #ff6b6b;
+            --success: #34d399;
+            --ring: 0 0 0 .16rem rgba(106, 227, 255, .35);
+            --radius: 14px;
+            --shadow: 0 10px 30px rgba(0, 0, 0, .35);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0
+        }
+
+        html, body {
+            height: 100%
+        }
+
+        body {
+            font-family: Arial, "Noto Sans TC", system-ui, -apple-system, Segoe UI, sans-serif;
+            background: linear-gradient(180deg, rgba(20, 24, 42, .92), rgba(20, 24, 42, .7));
+            color: var(--text);
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none
+        }
+
+        img {
+            display: block;
+            max-width: 100%
+        }
+
+        /* Layout */
+        .container {
+            display: grid;
+            grid-template-columns:260px 1fr;
+            gap: 0;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow: auto;
+            background: linear-gradient(180deg, var(--panel), var(--panel-2));
+            border-right: 1px solid var(--line);
+            padding: 22px 18px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .brand__logo {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--brand), var(--brand2));
+            box-shadow: var(--shadow)
+        }
+
+        .brand__name {
+            font-weight: 800;
+            letter-spacing: .5px
+        }
+
+        .side-group {
+            margin-top: 16px
+        }
+
+        .side-title {
+            font-size: 12px;
+            letter-spacing: .6px;
+            text-transform: uppercase;
+            color: var(--muted);
+            opacity: .9;
+            margin: 8px 10px
+        }
+
+        .side-link {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            border-radius: 10px;
+            border: 1px solid transparent;
+            transition: .18s
+        }
+
+        .side-link:hover {
+            background: rgba(255, 255, 255, .05);
+            border-color: var(--line)
+        }
+
+        .side-link.active {
+            background: rgba(106, 227, 255, .12);
+            border-color: rgba(106, 227, 255, .35)
+        }
+
+        /* Main */
+        .main {
+            padding: 28px 28px 80px
+        }
+
+        .toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 18px
+        }
+
+        .toolbar .title {
+            font-weight: 900;
+            font-size: 22px
+        }
+
+        .toolbar .actions {
+            display: flex;
+            align-items: center;
+            gap: 10px
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 9px 14px;
+            border-radius: 12px;
+            border: 1px solid var(--line);
+            background: #121833;
+            color: #dbe3f3;
+            font-weight: 700;
+            cursor: pointer
+        }
+
+        .btn.primary {
+            background: linear-gradient(135deg, var(--brand), var(--brand2));
+            color: #08101c;
+            border: none
+        }
+
+        .btn.ghost {
+            background: transparent
+        }
+
+        .btn.danger {
+            background: rgba(255, 107, 107, .12);
+            border-color: rgba(255, 107, 107, .35);
+            color: #ffd6d6
+        }
+
+        /* Cards & sections */
+        .card {
+            background: rgba(255, 255, 255, .04);
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow)
+        }
+
+        .panel {
+            padding: 18px
+        }
+
+        .panel + .panel {
+            margin-top: 16px
+        }
+
+        /* Profile */
+        .profile-grid {
+            display: grid;
+            grid-template-columns: 1fr; /* ← 改成單欄 */
+            gap: 16px;
+        }
+
+        .kv {
+            display: grid;
+            grid-template-columns: 120px 1fr;
+            gap: 10px;
+            padding: 10px 12px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, .03);
+            border: 1px dashed var(--line);
+        }
+
+        .kv b {
+            color: #cfe6ff;
+        }
+
+
+        .form {
+            display: grid;
+            gap: 14px
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns:1fr 1fr;
+            gap: 12px
+        }
+
+        .label {
+            font-size: 13px;
+            color: var(--muted);
+            margin-bottom: 6px
+        }
+
+        .input {
+            width: 100%;
+            background: #0f1426;
+            color: var(--text);
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            padding: 10px 12px;
+            outline: none;
+            transition: .15s
+        }
+
+        .input:focus {
+            border-color: rgba(106, 227, 255, .6);
+            box-shadow: var(--ring)
+        }
+
+        /* Tables */
+        .table-wrap {
+            overflow: auto;
+            border-radius: 12px
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0
+        }
+
+        thead th {
+            position: sticky;
+            top: 0;
+            background: linear-gradient(180deg, rgba(255, 255, 255, .08), rgba(255, 255, 255, .04));
+            color: #dbe3f3
+        }
+
+        th, td {
+            padding: 12px 14px;
+            border-bottom: 1px solid var(--line);
+            text-align: left
+        }
+
+        tbody tr:hover {
+            background: rgba(255, 255, 255, .03)
+        }
+
+        .status {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-size: 12px;
+            border: 1px solid var(--line)
+        }
+
+        .status.ok {
+            background: rgba(52, 211, 153, .12);
+            border-color: rgba(52, 211, 153, .4);
+            color: #b9f8dd
+        }
+
+        .status.pending {
+            background: rgba(106, 227, 255, .12);
+            border-color: rgba(106, 227, 255, .4);
+            color: #d3f6ff
+        }
+
+        .status.cancel {
+            background: rgba(255, 107, 107, .12);
+            border-color: rgba(255, 107, 107, .4);
+            color: #ffd6d6
+        }
+
+        /* Order detail summary */
+        .summary {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 14px
+        }
+
+        .summary-card {
+            min-width: 280px;
+            background: rgba(255, 255, 255, .05)
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 12px;
+            border-bottom: 1px dashed var(--line)
+        }
+
+        .summary-row.total {
+            border-top: 1px solid var(--line);
+            font-weight: 900
+        }
+
+        .price {
+            font-weight: 900;
+            color: #ffb4b4
+        }
+
+        /* Product cell */
+        .prod {
+            display: flex;
+            align-items: center;
+            gap: 12px
+        }
+
+        .prod-thumb {
+            width: 64px;
+            height: 64px;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid var(--line);
+            background: #0e1428
+        }
+
+        .prod-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover
+        }
+
+        .prod-name {
+            font-weight: 700
+        }
+
+        .muted {
+            color: var(--muted)
+        }
+
+        /* Utility */
+        [hidden] {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+<div id="app" class="container" data-view="profile">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="brand">
+            <div class="brand__logo"></div>
+            <div class="brand__name">會員中心</div>
+        </div>
+
+        <div class="side-group">
+            <div class="side-title">帳戶</div>
+            <a href="" class="side-link js-nav" data-target="profile">個人資料</a>
+        </div>
+
+        <div class="side-group">
+            <div class="side-title">交易</div>
+            <a href="#" class="side-link js-nav" data-target="orders">我的訂單</a>
+            <a href="cart.html" class="side-link">購物車</a>
+            <a href="index.html" class="side-link">回首頁</a>
+            <a href="login.html" class="side-link" id="logout">登出</a>
+        </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="main">
+        <div class="toolbar">
+            <div class="title" id="pageTitle">個人資料</div>
+            <div class="actions" id="profileActions">
+                <button class="btn" id="toEditBtn">編輯</button>
+            </div>
+        </div>
+
+        <!--個人資料 -->
+        <section class="card panel view" id="view-profile">
+            <div class="profile-grid">
+                <div class="kv"><b>姓名</b>
+                    <div id="name"></div>
+                </div>
+                <div class="kv"><b>電子信箱</b>
+                    <div id="email"></div>
+                </div>
+                <div class="kv"><b>電話</b>
+                    <div id="phone"></div>
+                </div>
+            </div>
+        </section>
+
+        <!--修改會員-->
+        <section class="card panel view" id="view-edit" hidden>
+            <form class="form" id="editForm">
+
+                <label class="label">姓名
+                    <input class="input" type="text" id="f-name" placeholder="請輸入姓名">
+                </label>
+
+                <label class="label">電子信箱
+                    <input class="input" type="email" id="f-email" placeholder="name@example.com">
+                </label>
+
+                <label class="label">電話
+                    <input class="input" type="tel" id="f-phone" placeholder="0900-000-000">
+                </label>
+
+                <label class="label">新密碼
+                    <input class="input" type="password" id="f-password" placeholder="留空則不變更">
+                </label>
+
+                <div style="display:flex; gap:10px; margin-top:4px">
+                    <button class="btn primary" type="submit" id="saveBtn">保存修改</button>
+                    <button class="btn ghost" type="button" id="cancelEditBtn">取消</button>
+                </div>
+
+            </form>
+        </section>
+
+
+        <!-- Orders List -->
+        <section class="card panel view" id="view-orders" hidden>
+            <div class="table-wrap">
+                <table id="ordersTable">
+                    <thead>
+                    <tr>
+                        <th>訂單編號</th>
+                        <th>成立日期</th>
+                        <th>配送地址</th>
+                        <th>收件人電話</th>
+                        <th>總金額</th>
+                        <th>狀態</th>
+                        <th style="width:120px">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody id="ordersTbody">
+                    <tr>
+                        <td colspan="7" class="muted">載入中…</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Order Detail -->
+        <section class="card panel view" id="view-orderDetail" hidden>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>商品編號</th>
+                        <th>商品資訊</th>
+                        <th>尺寸/顏色</th>
+                        <th>售價</th>
+                        <th>數量</th>
+                        <th>小計</th>
+                    </tr>
+                    </thead>
+                    <tbody id="itemsTbody">
+                    <tr>
+                        <td colspan="6" class="muted">載入中…</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="summary">
+                <div class="card panel summary-card" style="padding:0">
+                    <div class="summary-row"><span>商品總金額</span><span class="price" id="sum-product">NT$0</span></div>
+                    <div class="summary-row"><span>運費</span><span class="price" id="sum-ship">NT$60</span></div>
+                    <div class="summary-row total"><span>總金額</span><span class="price" id="sum-total">NT$60</span></div>
+                    <div style="display:flex; gap:10px; padding:12px">
+                        <button class="btn" id="backToOrders">返回</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+</div>
+
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script>
+    //登出
+    $(function () {
+        // 2. 發送AJAX請求
+        $("#logout").on("click", function (event) {
+            event.preventDefault();//阻止表單送出
+            const url = "/user/logout";
+            $.ajax({
+                url: url,    // 目標後端URL
+                type: "GET",           // 或 "POST"、"PUT"、"DELETE"
+                success: function (response) {
+                    if (response.code === 200) {
+                        window.location.href = "login.html"
+                    } else {
+                        alert("登出失敗");
+                    }
+                },
+                error: function (xhr) {
+                    console.error(xhr);
+                    alert("系統錯誤！");
+                }
+            });
+        });
+
+        //登入後顯示會員資料
+        $(function () {
+            // 2. 發送AJAX請求
+            const url = "/user/userInformation";
+            $.ajax({
+                url: url,    // 目標後端URL
+                type: "GET",           // 或 "POST"、"PUT"、"DELETE"
+                success: function (response) {
+                    if (response.code === 200) {
+                        const user = response.data;
+                        $("#name").text(user.name);
+                        $("#email").text(user.email);
+                        $("#phone").text(user.phone);
+                    } else {
+                        alert("尚未登入,請先登入");
+                        window.location.href = "login.html"
+                    }
+                },
+                error: function (xhr) {
+                    // 4. 失敗的話會執行這裡
+                    console.error(xhr);
+                    alert("系統錯誤！");
+                }
+            });
+        });
+
+        //修改會員點擊編輯後
+        $(function () {
+            $("#toEditBtn").on("click", function (event) {
+                event.preventDefault();//阻止表單送出
+                //從個人資料顯示區取資料
+                // const name = $("#name").text().trim();
+                // const email = $("#email").text().trim();
+                // const phone = $("#phone").text().trim();
+
+                //再填入輸入框變成預設&可作可不做
+                // $("#f-name").val(name);
+                // $("#f-email").val(email);
+                // $("#f-phone").val(phone);
+
+                //更新標題
+                $("#pageTitle").text("修改會員資料");   //修改標題
+                $(".view").attr("hidden", true);      // 全部隱藏
+                $("#view-edit").removeAttr("hidden"); // 顯示編輯畫面
+
+            });
+        });
+
+        // 「取消」按鈕切回個資畫面
+        $(function () {
+            $("#cancelEditBtn").on("click", function () {
+                $(".view").attr("hidden", true);//將所有的view加上隱藏屬性
+                $("#view-profile").removeAttr("hidden");//將這個id移除隱藏屬性hidden
+                $("#pageTitle").text("個人資料");
+            });
+        });
+
+
+        //點擊保存修改會員資料
+        $(function () {
+            $("#saveBtn").on("click", function (event) {
+                event.preventDefault();
+
+                //抓取輸入框的內容
+                const name = $("#f-name").val().trim();
+                const email = $("#f-email").val().trim();
+                const phone = $("#f-phone").val().trim();
+                const password = $("#f-password").val().trim();
+
+                //判斷內容是否有值(至少一個值),才能按保存,才能繼續往下執行
+                if (!name && !email && !phone && !password) {
+                    alert("請至少修改一項資料,才能保存修改！");
+                    return; // 終止執行，不發送 AJAX
+                }
+
+                // 2. 發送AJAX請求
+                const url = "/user/updateUser";
+                const data = {
+                    name: $("#f-name").val().trim(),
+                    email: $("#f-email").val().trim(),
+                    phone: $("#f-phone").val().trim(),
+                    password: $("#f-password").val().trim()
+                };
+                $.ajax({
+                    url: url,    // 目標後端URL
+                    type: "POST",           // 或 "POST"、"PUT"、"DELETE"
+                    dataType: "json",      // 預期回傳資料型態
+                    contentType: "application/json", // (POST才需要)
+                    data: JSON.stringify(data),
+                    success: function (response) {
+                        if (response.code === 200) {
+                            alert("修改成功！");
+                            window.location.href="user.html"
+                        } else {
+                            alert("修改失敗：");
+                        }
+                    },
+                    error: function (xhr) {
+                        // 4. 失敗的話會執行這裡
+                        console.error(xhr);
+                        alert("系統錯誤！");
+                    }
+                });
+            });
+        });
+
+
+    });
+</script>
+</body>
+</html>

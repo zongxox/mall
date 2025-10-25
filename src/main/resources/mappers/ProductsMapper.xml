@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mall.mapper.ProductsMapper">
+    <!--基於id查詢商品資訊-->
+    <select id="selectProducts" resultType="com.example.mall.entity.Products">
+        SELECT id, name, description, price, image_url, image_url2,image_url3,created_time, updated_time
+        FROM products WHERE id=#{productId};
+    </select>
+
+<!--查詢庫存顏色尺寸-->
+    <select id="selectProductsVariant" resultType="com.example.mall.entity.ProductVariant">
+        SELECT product_id,color, size, stock,created_time
+        FROM product_variants
+        WHERE product_id = #{productId};
+    </select>
+</mapper>

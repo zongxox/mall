@@ -1,0 +1,51 @@
+#數據庫連接
+spring:
+  datasource:
+    url: jdbc:mariadb://localhost:3306/mall?serverTimezone=Asia/Taipei&characterEncoding=utf-8
+    username: root
+    password: root
+
+
+#設置靜態資源文件夾
+  web:
+    resources:
+      static-locations: classpath:static,file:d:/file
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: s520yi2930@gmail.com
+    password: yfrf ebfb fvse kjpl
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            default-encoding: UTF-8
+
+#MyBatis開啟駝峰映射,並且掃描xml文件,定義多環境共有的配置
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true #開啟駝峰映射
+  mapper-locations: classpath:/mappers/*.xml #指定mapper文件的路徑 classpath就是表示target/classes目錄,如果使用xml就要加上這個,如果報錯把*改成指定文件
+  #指定實體類的包路徑
+  type-aliases-package: com.example.pojo
+
+# SpringBoot項目自带LogBack框架,默認的日志級別是INFO
+logging:
+  level:
+    com.example.mall.mapper: DEBUG
+    org.mybatis: DEBUG
+    org.apache.ibatis.logging.jdbc.BaseJdbcLogger: TRACE
+
+
+
+#分頁插件配置
+#pagehelper:
+#  helper-dialect: mysql #指定數據庫
+#  support-methods-arguments: true # 是否支持通過Mapper接口參數來傳遞分頁參數
+
+
+#knife4j配置
+knife4j:
+  enable: true

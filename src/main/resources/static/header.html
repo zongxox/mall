@@ -1,0 +1,83 @@
+<!-- header.html：Header + CSS + 事件（jQuery 需先於父頁載入） -->
+<style>
+  :root{
+    --bg:#0f1220; --panel:#14182a; --text:#e9eef7; --muted:#b9c0d0;
+    --brand:#6ae3ff; --brand2:#7c5cff; --ring:0 0 0 .14rem rgba(106,227,255,.45);
+  }
+  *{box-sizing:border-box}
+  a{color:inherit;text-decoration:none}
+  img{max-width:100%;display:block}
+
+  .container{width:1200px;margin:0 auto}
+
+  /* Header */
+  .site-header{
+    position:sticky;top:0;z-index:100;
+    background:linear-gradient(180deg,rgba(20,24,42,.88),rgba(20,24,42,.6));
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid rgba(255,255,255,.06);
+    color:var(--text);
+  }
+  .nav{display:flex;align-items:center;gap:24px;padding:14px 0}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:800}
+  .brand img{height:42px}
+
+  .search{position:relative;flex:1;min-width:200px}
+  .search input{
+    width:100%;background:#0f1426;color:var(--text);
+    border:1px solid rgba(255,255,255,.1);
+    border-radius:999px;padding:10px 44px 10px 40px;outline:none;transition:.2s;
+  }
+  .search input:focus{border-color:rgba(106,227,255,.7);box-shadow:var(--ring)}
+  .search svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);opacity:.7}
+  .search button{
+    position:absolute;right:6px;top:50%;transform:translateY(-50%);
+    background:linear-gradient(135deg,var(--brand),var(--brand2));
+    border:none;color:#0b0e18;padding:8px 12px;border-radius:999px;font-weight:700;cursor:pointer;
+  }
+
+  .menu{display:flex;align-items:center;gap:24px;white-space:nowrap}
+  .menu a{color:#dbe3f3;opacity:.9;font-weight:500}
+  .menu a:hover{opacity:1;text-decoration:underline}
+
+  .actions{display:flex;align-items:center;gap:10px}
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;
+    padding:8px 16px;border-radius:12px;background:#121833;
+    border:1px solid rgba(255,255,255,.08);color:#dbe3f3;font-weight:700;cursor:pointer;
+  }
+  .btn.primary{background:linear-gradient(135deg,var(--brand),var(--brand2));color:#071018;border:none}
+
+  .show-guest,.show-user,.show-admin{display:none}
+  header[data-auth="guest"] .show-guest{display:inline-flex}
+  header[data-auth="user"]  .show-user{display:inline-flex}
+  header[data-auth="admin"] .show-admin{display:inline-flex}
+</style>
+
+<header class="site-header" data-auth="guest">
+  <div class="container">
+    <div class="nav">
+      <a class="brand" href="index.html"><img src="images/logo.jpg" alt="Logo" /></a>
+
+      <form class="search" id="searchForm">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M21 21l-4.2-4.2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.8"/>
+        </svg>
+        <input id="q" type="search" placeholder="請輸入關鍵字…" />
+        <button type="submit">搜尋</button>
+      </form>
+
+      <div class="actions">
+        <a href="reg.html"   class="btn show-guest">註冊</a>
+        <a href="login.html" class="btn primary show-guest">登入</a>
+        <a href="user.html"  class="btn show-user">會員中心</a>
+        <a href="cart.html"  class="btn primary show-user">購物車</a>
+        <a href="admin.html" class="btn primary show-admin">管理中心</a>
+        <a href="index.html" class="btn show-user show-admin" id="logoutBtn">登出</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+

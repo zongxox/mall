@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>購物商城 登入</title>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0f1220;
+            --panel: #161a2f;
+            --card: #1a1f3a;
+            --text: #e9eef7;
+            --muted: #b6bdd1;
+            --brand: #7c5cff;
+            --brand-2: #6ae3ff;
+            --danger: #ff6b6b;
+            --ring: 0 0 0 .16rem rgba(106, 227, 255, .45);
+            --radius: 16px;
+            --shadow: 0 10px 30px rgba(0, 0, 0, .25);
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        html, body {
+            height: 100%
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Noto Sans TC', system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial;
+            color: var(--text);
+            background: radial-gradient(1000px 600px at 10% 10%, rgba(124, 92, 255, .25), transparent 60%),
+            radial-gradient(1000px 700px at 90% 20%, rgba(106, 227, 255, .18), transparent 60%),
+            linear-gradient(180deg, #0f1220 0%, #0f1220 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Card */
+        .auth-card {
+            background: linear-gradient(180deg, rgba(255, 255, 255, .05), rgba(255, 255, 255, .02));
+            border: 1px solid rgba(255, 255, 255, .08);
+            border-radius: var(--radius);
+            padding: clamp(22px, 3vw, 32px);
+            box-shadow: var(--shadow);
+            max-width: 400px;
+            width: 90%;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 14px
+        }
+
+        .brand h1 {
+            font-size: clamp(22px, 2.2vw, 28px);
+            margin: 0;
+            letter-spacing: .3px
+        }
+
+        .brand .link {
+            color: var(--brand-2);
+            text-decoration: none;
+            font-weight: 600;
+            white-space: nowrap
+        }
+
+        .subtitle {
+            color: var(--muted);
+            margin-bottom: 16px;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        /* Form */
+        form {
+            display: grid;
+            gap: 14px
+        }
+
+        .field {
+            display: grid;
+            gap: 8px
+        }
+
+        label {
+            font-weight: 700;
+            font-size: 14px
+        }
+
+        .control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #0f1330;
+            border: 1px solid rgba(255, 255, 255, .1);
+            border-radius: 12px;
+            padding: 10px 12px;
+            transition: box-shadow .15s ease, border-color .15s ease, background .15s ease
+        }
+
+        .control:focus-within {
+            box-shadow: var(--ring);
+            border-color: rgba(106, 227, 255, .6);
+            background: #10163a
+        }
+
+        .control input {
+            flex: 1;
+            min-width: 0;
+            border: 0;
+            outline: 0;
+            background: transparent;
+            color: var(--text);
+            font-size: 16px;
+            padding: 4px 2px
+        }
+
+        /* HTML5 驗證視覺（無 JS） */
+        input:required:invalid {
+            box-shadow: 0 0 0 2px rgba(255, 107, 107, .25) inset
+        }
+
+        input:required:valid {
+            box-shadow: 0 0 0 2px rgba(124, 92, 255, .2) inset
+        }
+
+        .row-between {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px
+        }
+
+        .forgot {
+            color: var(--brand-2);
+            text-decoration: none;
+            font-weight: 600
+        }
+
+        .actions {
+            display: grid;
+            gap: 10px;
+            margin-top: 8px
+        }
+
+        .btn {
+            appearance: none;
+            border: 0;
+            outline: 0;
+            cursor: pointer;
+            border-radius: 999px;
+            padding: 12px 16px;
+            font-weight: 800;
+            font-size: 16px;
+            color: #0a0f1f;
+            background: linear-gradient(90deg, var(--brand) 0%, var(--brand-2) 100%)
+        }
+
+        .btn[disabled] {
+            opacity: .7;
+            cursor: not-allowed;
+            filter: saturate(.6)
+        }
+
+        .message {
+            min-height: 20px;
+            text-align: center;
+            font-size: 14px;
+            color: var(--danger)
+        }
+    </style>
+</head>
+<body>
+<div class="auth-card">
+    <div class="brand">
+        <h1>購物商城 登入</h1>
+        <a class="link" href="reg.html">還沒有帳號？前往註冊 →</a>
+    </div>
+
+    <!-- 加上 id 方便 jQuery 綁定；action 只作參考，實際用 Ajax -->
+    <form id="loginForm" action="/login" method="post" novalidate>
+        <div class="field">
+            <label for="account">帳號</label>
+            <div class="control">
+                <input id="account" name="account" placeholder="請輸入帳號" autocomplete="username" required minlength="3"
+                       maxlength="30"/>
+            </div>
+        </div>
+
+        <div class="field">
+            <label for="password">密碼</label>
+            <div class="control">
+                <input id="password" name="password" type="password" placeholder="請輸入密碼" autocomplete="current-password"
+                       required minlength="8"/>
+            </div>
+        </div>
+
+        <div class="row-between">
+            <a class="forgot" href="login2.html">忘記密碼</a>
+        </div>
+
+        <div class="actions">
+            <button type="submit" class="btn" id="submitBtn">登入</button>
+            <div id="msg" class="message" role="status" aria-live="polite"></div>
+        </div>
+    </form>
+</div>
+
+<script>
+    $(function () {
+        $("form").on("submit", function (event) {
+            event.preventDefault();//阻止表單送出
+            const data = {
+                account: $("#account").val().trim(),
+                password: $("#password").val().trim()
+            };
+            const url = "user/login";
+
+            // 2. 發送AJAX請求
+            $.ajax({
+                url: url,    // 目標後端URL
+                type: "POST",           // 或 "POST"、"PUT"、"DELETE"
+                dataType: "json",      // 預期回傳資料型態
+                contentType: "application/json", // (POST才需要)
+                data: JSON.stringify(data),
+                success: function (response) {
+                    // 3. 成功的話會執行這裡
+                    if (response.code === 200) {
+                        alert("登入成功");
+                        window.location.href = "user.html";
+                    } else {
+                        alert("登入失敗");
+                    }
+                },
+                error: function (xhr) {
+                    // 4. 失敗的話會執行這裡
+                    console.error(xhr);
+                    alert("系統錯誤！");
+                }
+            });
+        })
+    });
+</script>
+</body>
+</html>
