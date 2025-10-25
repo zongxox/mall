@@ -219,19 +219,6 @@
     //Header
     $("#site-header").load("header.html");
 
-    $(function (e) {
-        let qty = 1;
-        $("#plus").on("click", function () {
-            qty++;
-            $("#qty-display").text(qty);
-        });
-
-        $("#minus").on("click", function () {
-            if (qty > 0) qty--;
-            $("#qty-display").text(qty);
-        });
-    });
-
     $(function () {
         let params = new URLSearchParams(window.location.search);//取得網址上參數方法
         let productID = params.get("id");//抓取網址上的k,v值 id=xx
@@ -309,6 +296,18 @@
                             $("#qty-display").text(1)
                         }
                     });
+
+                    var qty = 1;
+                    $("#plus").on("click", function () {
+                        qty++;
+                        $("#qty-display").text(qty);
+                    });
+
+                    $("#minus").on("click", function () {
+                        if (qty > 0) qty--;
+                        $("#qty-display").text(qty);
+                    });
+
 
                 } else {
                     alert("查無商品" + response.msg);
