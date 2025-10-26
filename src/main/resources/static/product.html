@@ -166,7 +166,7 @@
             <div class="block">
                 <h4>顏色</h4>
                 <div class="swatches">
-                    <input type="radio" name="color" id="c-black" value="black" checked>
+                    <input type="radio" name="color" id="c-black" value="black">
                     <label for="c-black" class="swatch-black" title="黑色"></label>
 
                     <input type="radio" name="color" id="c-white" value="white">
@@ -182,7 +182,7 @@
                 <h4>尺寸</h4>
                 <div class="sizes">
                     <input type="radio" name="size" id="s-xs" value="44"><label for="s-xs">44</label>
-                    <input type="radio" name="size" id="s-s" value="45" checked> <label for="s-s">45</label>
+                    <input type="radio" name="size" id="s-s" value="45"> <label for="s-s">45</label>
                 </div>
             </div>
 
@@ -193,7 +193,7 @@
                         <span>數量</span>
                         <div class="num-control">
                             <button type="button" class="btn-num" id="minus">−</button>
-                            <span id="qty-display">1</span>
+                            <span id="qty-display">0</span>
                             <button type="button" class="btn-num" id="plus">＋</button>
                         </div>
                     </div>
@@ -242,11 +242,14 @@
                     $(".img-main img").attr("src", p.imageUrl);
                     $("#img1").attr("src", p.imageUrl2);
                     $("#img2").attr("src", p.imageUrl3);
+                    //數量初始
+                    let qty = 0;
 
+
+                    const variants = p.variants;//先從後端傳過來的商品productId,顏色,尺寸,庫存資訊
                     //點擊顏色按鈕後執行,重新給庫存值
                     $("#c-black, #c-white, #c-pink").on("change", function () {
-                        const variants = p.variants;//先從後端傳過來的商品productId,顏色,尺寸,庫存資訊
-                        var selectColor;
+                        let selectColor;
                         //取得屬性id .attr()是jQuery寫法 = js 的getAttribute()
                         //$() 將抓到的id丟到裡面
                         if ($(this).attr("id") === "c-black") {
@@ -261,7 +264,15 @@
                         $("#s-xs").removeData("stock");
                         $("#s-s").removeData("stock");
 
-                        //只綁目前這個顏色的尺寸庫存
+
+                        //點擊顏色後初始化
+                        qty = 0;
+                        $("#qty-display").text(qty);//重新顯示數量從0開始
+                        $("#msg-box").text("請選擇尺寸！").show();//顯示隱藏元素文字
+                        $("#plus, #minus, #addToCart, #buyNow").hide();//將元素隱藏
+                        $("#s-xs, #s-s").prop("checked", false);//讓尺寸按鈕取消選取
+
+                        //只綁目前選取這個顏色的尺寸庫存
                         variants.forEach(v => {
                             if (v.color === selectColor && v.size === 44) {
                                 $("#s-xs").data("stock", v.stock);
@@ -281,36 +292,68 @@
                     //除非按別的按鈕在按回來,才會再跳出,目前沒有這個顏色或庫存及尺寸!!
                     //用click如果再重複點同一科按紐,就會在跳出,目前沒有這個顏色或庫存及尺寸!!
                     $("#s-xs,#s-s").on("change", function () {
+                        //判斷抓取到的點擊事件物件,裡面有沒有顏色事件
+                        //抓取顏色的點擊事件checked,存到selectedColor
+                        const selectedColor = $("#c-black:checked, #c-white:checked, #c-pink:checked");
+                        if (selectedColor.length===0) {
+                            $("#plus, #minus, #addToCart, #buyNow").hide();
+                            $("#msg-box").text("請先選取顏色！").show();
+                            // 讓尺寸按鈕也回復未選狀態
+                            $("#s-xs, #s-s").prop("checked", false);
+                            $("#qty-display").text(0);
+                            return; //結束這個事件，不再往下執行
+                        }
                         //除錯印出結果
                         console.log(`最終 data 狀態：44=`, $("#s-xs").data("stock"), " 45=", $("#s-s").data("stock"));
                         const stock = $(this).data("stock");
                         if (stock === undefined || stock === 0) {//將上面綁定的庫存變成物件進行判斷
                             $("#plus, #minus, #addToCart, #buyNow").hide();
                             $("#msg-box").text("目前沒有這個顏色或庫存及尺寸!!").show();
-                            let qty = 0;
                             $("#qty-display").text(0)
                         } else {
                             $("#plus, #minus, #addToCart, #buyNow").show();
                             $("#msg-box").hide();
-                            let qty = 1;
-                            $("#qty-display").text(1)
+                            $("#qty-display").text(qty)
                         }
-                    });
 
-                    var qty = 1;
-                    $("#plus").on("click", function () {
-                        qty++;
-                        $("#qty-display").text(qty);
-                    });
+                        //+號點擊事件
+                        $("#plus").on("click", function () {
+                            //抓尺寸點擊事件,存放到selectedSize物件
+                            const selectedSize = $("#s-xs:checked, #s-s:checked");
+                            // 這裡才是正確庫存值
+                            const stock = selectedSize.data("stock");
+                            //抓取顏色的點擊事件checked,存到selectedColor
+                            const selectedColor = $("#c-black:checked, #c-white:checked, #c-pink:checked");
 
-                    $("#minus").on("click", function () {
-                        if (qty > 0) qty--;
-                        $("#qty-display").text(qty);
-                    });
+                            //判斷顏色跟尺寸是否有選取按鈕
+                            if (selectedColor.length === 0||selectedSize.length===0) {
+                                $("#msg-box").text("請先選取顏色！").show();
+                                $("#plus, #minus, #addToCart, #buyNow").hide();
+                                return; //結束事件，不往下執行
+                            }
 
+                            //判斷是否超過庫存上限
+                            if (qty < stock) {
+                                qty++;
+                                $("#qty-display").text(qty);
+                                $("#msg-box").hide();
+                            } else {
+                                // 已達庫存上限 不再增加
+                                $("#msg-box").text("已達庫存上限!!").show();
+                            }
+                        });
+
+                        //-號點擊事件
+                        $("#minus").on("click", function () {
+                            if (qty > 0) qty--;
+                            $("#qty-display").text(qty);
+                        });
+
+
+                    });
 
                 } else {
-                    alert("查無商品" + response.msg);
+                    alert("查無商品," + response.msg);
                 }
             },
             error: function (xhr) {
