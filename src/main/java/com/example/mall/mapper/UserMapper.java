@@ -5,6 +5,8 @@ import com.example.mall.entity.User;
 import com.example.mall.vo.UserVo;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.time.LocalDateTime;
+
 @Mapper
 public interface UserMapper {
     int saveUser(User user);//註冊
@@ -22,4 +24,13 @@ public interface UserMapper {
     int updateUser(User user);//修改會員資料
 
     User userById(Integer id);//修改會員資料 基於用戶id查詢用戶資料
+
+    int updateResetTokenTime(String email, String resetToken, LocalDateTime resetTokenExpire);//忘記密碼設置resetToken,resetTokenExpire
+
+
+    User getResetTokenTime(String resetToken);//查詢前端傳送過來忘記密碼的token
+
+    int delResetTokenTime(String resetToken,String password);//清空前端透過連結過來的忘記密碼的token跟時間,並修改密碼
+
+    int delResetToken(String resetToken);//清空前端透過連結過來的忘記密碼的token跟時間
 }

@@ -157,5 +157,83 @@ public class UserServiceImpl implements UserService {
         return new JsonResult(StatusCode.OPERATION_FAILED,"操作失敗");
     }
 
+    //忘記密碼
+    @Override
+    public JsonResult resetPwd(UserDto userDto) {
+        String email = userDto.getEmail();
+        //判斷email是否為空
+        if(email == null){
+            return new JsonResult(StatusCode.EMAIL_EMPTY,"email不可為空");
+        }
+        //email格式驗證
+        String emailRegex = "^[a-zA-Z0-9]+@[a-zA-Z]+\\.[a-zA-Z]{2,}$";
+        if (!Pattern.matches(emailRegex, email)) {//判斷emailRegex跟email
+            return new JsonResult(StatusCode.PARAM_ERROR, "Email 格式不正確");
+        }
+
+        //查詢資料庫是否有該email
+        User userByEmail = userMapper.getUserByEmail(email);
+
+        //判斷數據庫是否有前端傳遞過來的email
+        if(userByEmail==null){
+            return new JsonResult(StatusCode.EMAIL_NOT_FOUND,"沒有該信箱");
+        }
+
+        String resetToken = UUID.randomUUID().toString();
+        LocalDateTime resetTokenExpire = LocalDateTime.now().plusMinutes(30);
+        //LocalDateTime resetTokenExpire = LocalDateTime.now().plusSeconds(1); 測試用
+        User user = new User();
+        BeanUtils.copyProperties(userDto,user);
+        user.setResetToken(resetToken);
+        user.setResetTokenExpire(resetTokenExpire);
+        int rows = userMapper.updateResetTokenTime(user.getEmail(),user.getResetToken(),user.getResetTokenExpire());
+        if(rows > 0){//新增成功時
+            SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+            simpleMailMessage.setTo(user.getEmail());
+            simpleMailMessage.setSubject("重設密碼連結");
+            simpleMailMessage.setText("http://localhost:8080/reset-password.html?resetToken="+resetToken);
+            javaMailSender.send(simpleMailMessage);
+            return JsonResult.ok();
+        }
+
+        return new JsonResult(StatusCode.EMAIL_VERIFICATION_FAILED,"驗證失敗");
+    }
+
+    //修改密碼並判斷token是否過期或無效
+    @Override
+    public JsonResult getResetPwd(UserDto userDto) {
+        String reset_token = userDto.getResetToken();
+        User resetTokenTime = userMapper.getResetTokenTime(reset_token);
+        String password = userDto.getPassword();
+
+
+        //判斷是否為空或已經驗證過
+        if(resetTokenTime==null){
+            return new JsonResult(StatusCode.EMAIL_TOKEN_INVALID_OR_USED,"無效或以使用的連結");
+        }
+        //用現在時間跟數據庫的時間比對
+        LocalDateTime resetTokenExpire = resetTokenTime.getResetTokenExpire();
+        if(resetTokenExpire==null || LocalDateTime.now().isAfter(resetTokenExpire)){
+            userMapper.delResetToken(reset_token);//失敗時刪掉token讓用戶重新點選忘記密碼
+            return new JsonResult(StatusCode.EMAIL_TOKEN_EXPIRED,"驗證連結已過期");
+        }
+
+        if (password == null || password.trim().isEmpty()) {
+            return new JsonResult(StatusCode.EMAIL_EMPTY,"密碼不可為空");
+        }
+
+
+        if(password.length()<6){
+            return new JsonResult(StatusCode.EMAIL_EMPTY,"請至少輸入6位數,含英文");
+        }
+
+        int rows = userMapper.delResetTokenTime(reset_token, password);
+        if(rows>0){
+            return JsonResult.ok("更新密碼成功");
+        }
+
+        return new JsonResult(StatusCode.PASSWORD_UPDATE_FAILED);
+    }
+
 
 }

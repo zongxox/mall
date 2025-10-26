@@ -10,4 +10,7 @@ public interface UserService {
     JsonResult selectAccountPassword (UserDto userDto, HttpSession session);//登入查詢帳號密碼是否正確
     JsonResult userByInformation(HttpSession session);//利用登入存的session去顯示會員資料
     JsonResult updateUser(UserDto userDto,HttpSession session);//修改會員資料
+    JsonResult resetPwd(UserDto userDto);//忘記密碼
+    JsonResult getResetPwd(UserDto userDto);//修改密碼
+
 }

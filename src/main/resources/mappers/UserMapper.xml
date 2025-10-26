@@ -83,4 +83,38 @@
         FROM user
         WHERE id = #{id}
     </select>
+
+    <!--忘記密碼設置resetToken,resetTokenExpire-->
+    <update id="updateResetTokenTime">
+        UPDATE user
+        SET reset_token        = #{resetToken},
+            reset_token_expire = #{resetTokenExpire},
+            updated_time       = NOW()
+        WHERE email = #{email}
+    </update>
+
+    <!--查詢前端傳送過來忘記密碼的token-->
+    <select id="getResetTokenTime" resultType="com.example.mall.entity.User">
+        SELECT reset_token,reset_token_expire
+        FROM user
+        WHERE reset_token = #{resetToken}
+    </select>
+
+    <!--清空前端透過連結過來的忘記密碼的token跟時間,並修改密碼-->
+    <update id="delResetTokenTime">
+        UPDATE user
+        SET password = #{password},
+            reset_token        = null,
+            reset_token_expire = null,
+            updated_time=now()
+        WHERE reset_token = #{resetToken}
+    </update>
+    <!--清空前端透過連結過來的忘記密碼的token跟時間-->
+    <update id="delResetToken">
+        UPDATE user
+        SET reset_token        = null,
+            reset_token_expire = null,
+            updated_time=now()
+        WHERE reset_token = #{resetToken}
+    </update>
 </mapper>

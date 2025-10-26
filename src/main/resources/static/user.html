@@ -595,26 +595,23 @@
             $("#saveBtn").on("click", function (event) {
                 event.preventDefault();
 
-                //抓取輸入框的內容
-                const name = $("#f-name").val().trim();
-                const email = $("#f-email").val().trim();
-                const phone = $("#f-phone").val().trim();
-                const password = $("#f-password").val().trim();
+                const data = {
+                    name: $("#f-name").val().trim(),
+                    email: $("#f-email").val().trim(),
+                    phone: $("#f-phone").val().trim(),
+                    password: $("#f-password").val().trim()
+                }
+
 
                 //判斷內容是否有值(至少一個值),才能按保存,才能繼續往下執行
-                if (!name && !email && !phone && !password) {
+                if (!data.name && !data.email && !data.phone && !data.password) {
                     alert("請至少修改一項資料,才能保存修改！");
                     return; // 終止執行，不發送 AJAX
                 }
 
                 // 2. 發送AJAX請求
                 const url = "/user/updateUser";
-                const data = {
-                    name: $("#f-name").val().trim(),
-                    email: $("#f-email").val().trim(),
-                    phone: $("#f-phone").val().trim(),
-                    password: $("#f-password").val().trim()
-                };
+;
                 $.ajax({
                     url: url,    // 目標後端URL
                     type: "POST",           // 或 "POST"、"PUT"、"DELETE"

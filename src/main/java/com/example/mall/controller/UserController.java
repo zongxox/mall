@@ -49,4 +49,16 @@ public class UserController {
     public JsonResult updateUser(@RequestBody UserDto userDto,HttpSession session){
         return userServiceImpl.updateUser(userDto,session);
     }
+    //忘記密碼接收輸入框的email
+    @PostMapping("/sendResetPasswordEmail")
+    public JsonResult sendResetPasswordEmail(@RequestBody UserDto userDto){
+        return userServiceImpl.resetPwd(userDto);
+    }
+
+    //
+    @PostMapping("/resetPassword")
+    public JsonResult getResetPwd(@RequestBody UserDto userDto){
+        return userServiceImpl.getResetPwd(userDto);
+    }
+
 }
