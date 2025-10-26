@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <title>忘記密碼 - Clothique</title>
+  <style>
+    body {
+      font-family: 'Noto Sans TC', Arial, sans-serif;
+      background:
+              radial-gradient(800px 350px at 85% 0%, rgba(106,227,255,.16), transparent 60%),
+              radial-gradient(800px 350px at 0% 10%, rgba(124,92,255,.18), transparent 60%),
+              #0f1220;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      color: #e9eef7;
+    }
+
+    .forgot-password-box {
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      border: 1px solid rgba(255,255,255,.12);
+      padding: 32px;
+      border-radius: 16px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+      backdrop-filter: blur(6px);
+    }
+
+    .forgot-password-box h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #ffffff;
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    .forgot-password-box label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #b6bdd1;
+      text-align: left;
+    }
+
+    .forgot-password-box input[type="email"] {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 20px;
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: 10px;
+      font-size: 15px;
+      color: #e9eef7;
+      background: rgba(255,255,255,.05);
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    .forgot-password-box input[type="email"]:focus {
+      border-color: #6ae3ff;
+      box-shadow: 0 0 6px rgba(106,227,255,.4);
+      outline: none;
+    }
+
+    .forgot-password-box button {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(90deg, #7c5cff 0%, #6ae3ff 100%);
+      color: #0b0f1f;
+      border: none;
+      border-radius: 999px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.15s ease, opacity 0.2s;
+    }
+
+    .forgot-password-box button:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+
+    .forgot-password-box p {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 14px;
+      color: #b6bdd1;
+    }
+
+    .forgot-password-box a {
+      color: #6ae3ff;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .forgot-password-box a:hover {
+      text-decoration: underline;
+    }
+
+    /* 淺色模式 */
+    @media (prefers-color-scheme: light) {
+      body {
+        background: #f6f7fb;
+        color: #121622;
+      }
+      .forgot-password-box {
+        background: #fff;
+        border: 1px solid #e8ecf4;
+        box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+      }
+      .forgot-password-box label { color: #444; }
+      .forgot-password-box input[type="email"] {
+        background: #f8f9fc;
+        color: #121622;
+        border-color: #ddd;
+      }
+      .forgot-password-box a { color: #007bff; }
+      .forgot-password-box button {
+        background: linear-gradient(90deg, #007bff 0%, #5ab9ff 100%);
+        color: white;
+      }
+    }
+
+  </style>
+</head>
+<body>
+
+<div class="forgot-password-box">
+  <h2>忘記密碼</h2>
+  <form id="forgotPasswordForm">
+    <label for="email">請輸入註冊時的電子信箱</label>
+    <input type="email" id="email" name="email" placeholder="example@gmail.com" required>
+    <button type="submit">發送重設密碼連結</button>
+  </form>
+  <p><a href="login.html">返回登入頁</a></p>
+</div>
+</body>
