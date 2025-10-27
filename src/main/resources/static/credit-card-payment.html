@@ -1,0 +1,227 @@
+
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <title>購物商城 付款詳細資料</title>
+    <style>
+        :root{
+            --bg:#0f1220; --panel:#161a2f; --text:#e9eef7; --muted:#b6bdd1;
+            --brand:#7c5cff; --brand2:#6ae3ff; --success:#34d399; --danger:#ff6b6b;
+            --ring:0 0 0 .16rem rgba(106,227,255,.45); --radius:16px; --shadow:0 10px 30px rgba(0,0,0,.25);
+        }
+        *{box-sizing:border-box}
+        html,body{height:100%}
+
+        body{
+            margin:0;
+            font-family:'Noto Sans TC',system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;
+            background:
+                    radial-gradient(800px 350px at 85% 0%, rgba(106,227,255,.16), transparent 60%),
+                    radial-gradient(800px 350px at 0% 10%, rgba(124,92,255,.18), transparent 60%),
+                    var(--bg);
+            color:var(--text);
+            display:flex; justify-content:center; align-items:center;
+            min-height:100vh; padding:20px;
+        }
+
+        .payment-container{
+            width:min(640px, 92vw);
+            background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+            border:1px solid rgba(255,255,255,.12);
+            border-radius:var(--radius);
+            box-shadow:var(--shadow);
+            padding:28px;
+            backdrop-filter: blur(6px);
+        }
+
+        .payment-header{
+            display:flex; align-items:center; gap:10px;
+            padding-bottom:12px; margin-bottom:18px;
+            border-bottom:1px solid rgba(255,255,255,.12);
+        }
+        .payment-header h2{
+            margin:0; font-size:22px; font-weight:700;
+        }
+
+        .required-info{ text-align:right; color:var(--muted); font-size:14px; margin-bottom:14px; }
+
+        .form-group{ margin-bottom:18px; }
+        .form-group label{
+            display:block; margin-bottom:8px; font-weight:700; color:var(--text);
+        }
+        .form-group label .required{ color:var(--danger); margin-left:4px; }
+
+        /* 卡片類型選項：隱藏 radio，label 當卡片 */
+        .card-type-options{
+            display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:12px; align-items:stretch;
+        }
+        .card-type-option{ position:relative; }
+        .card-type-option input[type="radio"]{
+            position:absolute; inset:0; opacity:0; cursor:pointer;
+        }
+        .card-type-option label{
+            display:flex; align-items:center; justify-content:center; gap:10px;
+            height:56px; padding:0 14px; cursor:pointer;
+            border-radius:999px;
+            background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+            border:1px solid rgba(255,255,255,.16);
+            transition:transform .05s ease, box-shadow .2s ease, background .2s ease;
+            user-select:none;
+        }
+        .card-type-option img{ height:20px; display:block; }
+        .card-type-option input[type="radio"]:hover + label{
+            background:rgba(255,255,255,.08);
+        }
+        .card-type-option input[type="radio"]:focus-visible + label{
+            box-shadow: var(--ring);
+        }
+        .card-type-option input[type="radio"]:checked + label{
+            border-color:transparent;
+            background:linear-gradient(90deg, var(--brand) 0%, var(--brand2) 100%);
+            color:#0b0f1f;
+        }
+
+        /* 輸入欄位 */
+        .form-group input[type="text"],
+        .form-group select{
+            width:100%; padding:12px 14px; font-size:16px; border-radius:12px;
+            border:1px solid rgba(255,255,255,.16);
+            background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+            color:var(--text);
+            outline:none;
+            transition: box-shadow .2s ease, border-color .2s ease, background .2s ease;
+        }
+        .form-group input::placeholder{ color:rgba(233,238,247,.55); }
+        .form-group input[type="text"]:focus,
+        .form-group select:focus{ box-shadow: var(--ring); }
+
+        .expiry-date-group{ display:flex; gap:14px; }
+        .expiry-date-group>div{ flex:1; }
+
+        .cvn-info{
+            display:flex; align-items:center; gap:10px;
+            margin-top:8px; font-size:14px; color:var(--muted);
+        }
+        .cvn-info img{
+            height:30px; border:1px solid rgba(255,255,255,.16); border-radius:8px;
+        }
+
+        /* 送出按鈕：同系列漸層膠囊 */
+        .submit-button-container{ text-align:right; margin-top:24px; }
+        .submit-button{
+            appearance:none; border:0; outline:0; cursor:pointer;
+            padding:12px 22px; border-radius:999px; font-weight:800; font-size:16px;
+            color:#0b0f1f; background:linear-gradient(90deg, var(--brand) 0%, var(--brand2) 100%);
+            transition:transform .05s ease, opacity .2s ease, box-shadow .2s ease;
+        }
+        .submit-button:hover{ opacity:.95 }
+        .submit-button:active{ transform:translateY(1px); }
+        .submit-button:focus-visible{ box-shadow: var(--ring); }
+
+        /* 手機優化 */
+        @media (max-width: 560px){
+            .payment-container{ padding:22px; }
+            .expiry-date-group{ flex-direction:column; gap:10px; }
+            .card-type-options{ grid-template-columns:1fr; }
+        }
+
+        /* 亮色系統偏好 */
+        @media (prefers-color-scheme: light){
+            body{ background:#f6f7fb; color:#121622; }
+            .payment-container{
+                background:#fff; border:1px solid #e8ecf4; color:#121622;
+            }
+            .payment-header{ border-bottom:1px solid #e8ecf4; }
+            .required-info{ color:#556; }
+            .card-type-option label{
+                background:#fff; border:1px solid #e8ecf4;
+            }
+            .form-group input[type="text"],
+            .form-group select{
+                background:#fff; border:1px solid #e8ecf4; color:#121622;
+            }
+            .cvn-info img{ border-color:#e8ecf4; }
+        }
+    </style>
+
+</head>
+<body>
+<div class="payment-container">
+    <div class="payment-header">
+        <h2>付款詳細資料</h2>
+    </div>
+
+    <div class="required-info">
+        * 必填欄位
+    </div>
+
+    <form id="paymentForm">
+        <div class="form-group">
+            <label>信用卡類型 <span class="required">*</span></label>
+            <div class="card-type-options">
+                <div class="card-type-option">
+                    <input type="radio" id="visa" name="card_type" value="visa">
+                    <label for="visa">
+                        <img src="images/icon_visa.png" alt="Visa"> Visa
+                    </label>
+                </div>
+                <div class="card-type-option">
+                    <input type="radio" id="mastercard" name="card_type" value="mastercard">
+                    <label for="mastercard">
+                        <img src="images/icon_MasterCard.png" alt="Mastercard"> Mastercard
+                    </label>
+                </div>
+                <div class="card-type-option">
+                    <input type="radio" id="jcb" name="card_type" value="jcb">
+                    <label for="jcb">
+                        <img src="images/icon_jcb.png" alt="JCB"> JCB
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="card_number">信用卡號碼 <span class="required">*</span></label>
+            <input type="text" id="card_number" name="card_number" placeholder="XXXX-XXXX-XXXX-XXXX" required>
+        </div>
+
+        <div class="form-group">
+            <div class="expiry-date-group">
+                <div>
+                    <label for="expiry_month">月份 <span class="required">*</span></label>
+                    <select id="expiry_month" name="expiry_month" required>
+                        <option value="">月</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="expiry_year">年份 <span class="required">*</span></label>
+                    <select id="expiry_year" name="expiry_year" required>
+                        <option value="">年</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="cvn">CVN <span class="required">*</span></label>
+            <input type="text" id="cvn" name="cvn" placeholder="XXX" required>
+            <div class="cvn-info">
+                此代碼為印於信用卡正面或背面的三位或四位數字。
+                <img src="images/icon_cvn.jpg" alt="CVN example">
+            </div>
+        </div>
+
+        <div class="submit-button-container">
+            <button id="check-order" type="submit" class="submit-button">付款</button>
+        </div>
+    </form>
+</div>
+
+<script>
+
+</script>
+</body>
+</html>
