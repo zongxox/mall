@@ -1,4 +1,4 @@
-<!-- header.html：Header + CSS + 事件（jQuery 需先於父頁載入） -->
+<!-- header.html：統一藍紫漸層主按鈕風格 -->
 <style>
   :root{
     --bg:#0f1220; --panel:#14182a; --text:#e9eef7; --muted:#b9c0d0;
@@ -22,6 +22,7 @@
   .brand{display:flex;align-items:center;gap:10px;font-weight:800}
   .brand img{height:42px}
 
+  /* 搜尋欄 */
   .search{position:relative;flex:1;min-width:200px}
   .search input{
     width:100%;background:#0f1426;color:var(--text);
@@ -36,18 +37,34 @@
     border:none;color:#0b0e18;padding:8px 12px;border-radius:999px;font-weight:700;cursor:pointer;
   }
 
+  /* 導覽與按鈕 */
   .menu{display:flex;align-items:center;gap:24px;white-space:nowrap}
   .menu a{color:#dbe3f3;opacity:.9;font-weight:500}
   .menu a:hover{opacity:1;text-decoration:underline}
 
   .actions{display:flex;align-items:center;gap:10px}
-  .btn{
-    display:inline-flex;align-items:center;justify-content:center;
-    padding:8px 16px;border-radius:12px;background:#121833;
-    border:1px solid rgba(255,255,255,.08);color:#dbe3f3;font-weight:700;cursor:pointer;
-  }
-  .btn.primary{background:linear-gradient(135deg,var(--brand),var(--brand2));color:#071018;border:none}
 
+  /* ✅ 統一所有按鈕樣式成主題藍紫漸層風格 */
+  .btn {
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    padding:8px 18px;
+    border-radius:12px;
+    background:linear-gradient(135deg,var(--brand),var(--brand2));
+    border:none;
+    color:#071018;
+    font-weight:700;
+    cursor:pointer;
+    transition:all 0.25s ease;
+    box-shadow:0 4px 10px rgba(106,227,255,0.25);
+  }
+  .btn:hover {
+    transform:translateY(-2px);
+    box-shadow:0 6px 16px rgba(106,227,255,0.45);
+  }
+
+  /* 會員與權限顯示控制 */
   .show-guest,.show-user,.show-admin{display:none}
   header[data-auth="guest"] .show-guest{display:inline-flex}
   header[data-auth="user"]  .show-user{display:inline-flex}
@@ -69,15 +86,13 @@
       </form>
 
       <div class="actions">
-        <a href="reg.html"   class="btn show-guest">註冊</a>
-        <a href="login.html" class="btn primary show-guest">登入</a>
-        <a href="user.html"  class="btn show-user">會員中心</a>
-        <a href="cart.html"  class="btn primary show-user">購物車</a>
-        <a href="admin.html" class="btn primary show-admin">管理中心</a>
+        <a href="reg.html"   class="btn show-guest" id="btn-register">註冊</a>
+        <a href="login.html" class="btn show-guest" id="btn-login">登入</a>
+        <a href="user.html"  class="btn show-user"  id="btn-user">會員中心</a>
+        <a href="cart.html"  class="btn show-user"  id="btn-cart">購物車</a>
+        <a href="admin.html" class="btn show-admin" id="btn-admin">管理中心</a>
         <a href="index.html" class="btn show-user show-admin" id="logoutBtn">登出</a>
       </div>
     </div>
   </div>
 </header>
-
-

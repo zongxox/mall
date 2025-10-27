@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <!-- jQuery -->
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-
+  <script src="js/header.js"></script>
   <style>
     :root{
       --bg:#0f1220; --panel:#14182a; --text:#e9eef7; --muted:#b9c0d0;
@@ -51,10 +51,10 @@
 </head>
 
 <body>
-<!-- Header 改為外掛 -->
+<!--Header-->
 <header id="site-header"></header>
 
-<!-- Hero（改為靜態 HTML，由 jQuery 控制） -->
+<!--Hero-->
 <section class="container hero" id="hero">
   <div class="hero-inner">
     <div class="slides">
@@ -135,12 +135,7 @@
 </section>
 
 <script>
-  // 掛載共用 header（保留原樣）
-  $(function(){
-    $('#site-header').load('header.html');
-  });
-
-  // ====== Hero 轮播（jQuery）======
+  //輪播圖======
   $(function(){
     var $hero   = $('#hero');
     var $slides = $hero.find('.slides');

@@ -5,6 +5,7 @@
     <title>購物商城 商品頁</title>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="js/header.js"></script>
     <style>
         :root {
             --bg: #0f1220;
@@ -140,7 +141,7 @@
 </head>
 <body>
 
-<!-- 掛載點：載入 header.html（含 Header 的 CSS + HTML + 事件） -->
+<!--header-->
 <div id="site-header"></div>
 
 <div class="container">
@@ -216,9 +217,6 @@
 </div>
 
 <script>
-    //Header
-    $("#site-header").load("header.html");
-
     $(function () {
         let params = new URLSearchParams(window.location.search);//取得網址上參數方法
         let productID = params.get("id");//抓取網址上的k,v值 id=xx
@@ -295,7 +293,7 @@
                         //判斷抓取到的點擊事件物件,裡面有沒有顏色事件
                         //抓取顏色的點擊事件checked,存到selectedColor
                         const selectedColor = $("#c-black:checked, #c-white:checked, #c-pink:checked");
-                        if (selectedColor.length===0) {
+                        if (selectedColor.length === 0) {
                             $("#plus, #minus, #addToCart, #buyNow").hide();
                             $("#msg-box").text("請先選取顏色！").show();
                             // 讓尺寸按鈕也回復未選狀態
@@ -326,7 +324,7 @@
                             const selectedColor = $("#c-black:checked, #c-white:checked, #c-pink:checked");
 
                             //判斷顏色跟尺寸是否有選取按鈕
-                            if (selectedColor.length === 0||selectedSize.length===0) {
+                            if (selectedColor.length === 0 || selectedSize.length === 0) {
                                 $("#msg-box").text("請先選取顏色！").show();
                                 $("#plus, #minus, #addToCart, #buyNow").hide();
                                 return; //結束事件，不往下執行
@@ -348,6 +346,9 @@
                             if (qty > 0) qty--;
                             $("#qty-display").text(qty);
                         });
+                        //點擊加入購物車,要先判斷有沒有登入,將顏色,尺寸,數量存到購物車數據庫
+
+                        //點立即購買,要先判斷有沒有登入,將顏色,尺寸,數量存到購物車數據庫裡面
 
 
                     });

@@ -32,6 +32,7 @@ public class UserController {
         return userServiceImpl.selectAccountPassword(userDto,session);
     }
 
+    //登出
     @GetMapping("/logout")
     public JsonResult logout(HttpSession session){
         session.invalidate();
