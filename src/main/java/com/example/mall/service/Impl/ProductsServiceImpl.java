@@ -28,7 +28,7 @@ public class ProductsServiceImpl implements ProductsService {
         return JsonResult.ok(list);
     }
 
-    //基於id查詢商品資訊
+    //基於productId查詢商品資訊
     @Override
     public JsonResult selectProducts(Integer productId) {
         //查詢到的商品資訊
@@ -39,7 +39,7 @@ public class ProductsServiceImpl implements ProductsService {
             return new JsonResult(StatusCode.PRODUCTS_FAIL,"沒有此商品");
         }
 
-        //基於id查詢尺寸庫存顏色
+        //基於productId查詢尺寸庫存顏色
         List<ProductVariant> productVariants = productsMapper.selectProductsVariant(productId);
 
         ProductsVo productsVO = new ProductsVo();
