@@ -8,6 +8,7 @@ import java.util.List;
 
 @Mapper
 public interface ProductsMapper {
+    List<Products> selectProductsAll(Products products);//動態查詢全部商品
     Products selectProducts(Integer id);//基於id查詢商品資訊
     List<ProductVariant> selectProductsVariant(Integer productId);//查詢庫存顏色尺寸
 }

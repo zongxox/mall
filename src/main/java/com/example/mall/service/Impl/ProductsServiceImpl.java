@@ -18,6 +18,15 @@ public class ProductsServiceImpl implements ProductsService {
     @Autowired
     private ProductsMapper productsMapper;
 
+    //動態查詢全部商品
+    @Override
+    public JsonResult selectProductsAll(Products products) {
+        List<Products> list = productsMapper.selectProductsAll(products);
+        if(list == null || list.isEmpty()){
+            return new JsonResult(StatusCode.PRODUCTS_FAIL,"目前沒有商品資料");
+        }
+        return JsonResult.ok(list);
+    }
 
     //基於id查詢商品資訊
     @Override
@@ -27,7 +36,7 @@ public class ProductsServiceImpl implements ProductsService {
 
         //判斷商品資訊是不是空的
         if(products1==null){
-            return new JsonResult(StatusCode.OPERATION_FAILED,"沒有此商品");
+            return new JsonResult(StatusCode.PRODUCTS_FAIL,"沒有此商品");
         }
 
         //基於id查詢尺寸庫存顏色

@@ -103,35 +103,7 @@
 
 <!-- 商品 -->
 <section class="container product-section" id="products">
-  <div class="products">
-    <a class="product-card" href="product.html?id=1">
-      <img src="images/boy1-1.jpg" alt="adidas 愛迪達 DURAMO RC 精選運動鞋 男性跑鞋 慢跑鞋"><div class="title">adidas 愛迪達 DURAMO RC 精選運動鞋 男性跑鞋 慢跑鞋</div>
-    </a>
-    <a class="product-card" href="product.html?id=2">
-      <img src="images/boy2-1.jpg" alt="adidas 愛迪達 RUN 70S 2.0 男性休閒鞋 運動鞋 跑鞋"><div class="title">adidas 愛迪達 RUN 70S 2.0 男性休閒鞋 運動鞋 跑鞋</div>
-    </a>
-    <a class="product-card" href="product.html?id=3">
-      <img src="images/boy3-1.jpg" alt="官方旗艦 Enzo 2 男性慢跑運動鞋"><div class="title">官方旗艦 Enzo 2 男性慢跑運動鞋</div>
-    </a>
-    <a class="product-card" href="product.html?id=4">
-      <img src="images/boy4-1.jpg" alt="DESCENTE 迪桑特 CHRON RACER 男性 潮流休閒鞋"><div class="title">DESCENTE 迪桑特 CHRON RACER 男性 潮流休閒鞋</div>
-    </a>
-    <a class="product-card" href="product.html?id=5">
-      <img src="images/boy5-1.jpg" alt="asics 亞瑟士 JOLT 5 男性 跑鞋 運動鞋"><div class="title">asics 亞瑟士 JOLT 5 男性 跑鞋 運動鞋</div>
-    </a>
-    <a class="product-card" href="product.html?id=6">
-      <img src="images/boy6-1.jpg" alt="UMA官方旗艦 Retaliate 3 男性慢跑運動鞋"><div class="title">UMA官方旗艦 Retaliate 3 男性慢跑運動鞋</div>
-    </a>
-    <a class="product-card" href="product.html?id=7">
-      <img src="images/boy7-1.jpg" alt="PLAYBOY 輕盈plus 男性透氣懶人休閒鞋 防水洞洞鞋"><div class="title">PLAYBOY 輕盈plus 男性透氣懶人休閒鞋 防水洞洞鞋</div>
-    </a>
-    <a class="product-card" href="product.html?id=8">
-      <img src="images/boy8-1.jpg" alt="NIKE 耐吉 慢跑鞋 男性運動鞋 氣墊 緩震 AIR MAX BIA 黑"><div class="title">NIKE 耐吉 慢跑鞋 男性運動鞋 氣墊 緩震 AIR MAX BIA 黑</div>
-    </a>
-    <a class="product-card" href="product.html?id=9">
-      <img src="images/boy9-1.jpg" alt="adidas 愛迪達 CORERACER 運動鞋 男鞋"><div class="title">adidas 愛迪達 CORERACER 運動鞋 男鞋</div>
-    </a>
-  </div>
+  <div class="products"></div>
 </section>
 
 <script>
@@ -166,6 +138,45 @@
     $hero.find('.arrow.left').on('click',  prev);
     $dots.on('click', function(){ go(parseInt($(this).data('index'),10)); });
     $hero.find('.hero-inner').on('mouseenter', stop).on('mouseleave', play);
+  });
+
+  //動態生成商品連結
+  $(function() {
+    const url = "/products/all";
+    $.ajax({
+      url: url,
+      type: "GET",
+      dataType: "json",
+      success: function(response) {
+        if (response.code === 200) {
+          const product = response.data;//取得後端傳遞過來的商品資訊
+//<a class="product-card" href="product.html?id=1">-->
+//<img src="images/boy1-1.jpg" alt="adidas 愛迪達 DURAMO RC 精選運動鞋 男性跑鞋 慢跑鞋">
+//<div class="title">adidas 愛迪達 DURAMO RC 精選運動鞋 男性跑鞋 慢跑鞋</div>-->
+//</a>-->
+          product.forEach(p => {
+            const card = $('<a>') //生成超連結
+                    //超連結加上class名,對應CSS用
+                    .addClass('product-card')
+                    //超連結綁定資料庫查詢到的商品id
+                    .attr('href', `product.html?id=${p.id}`)
+                    //生成img,src 跟 alt 綁定資料庫哪個id的,圖片路徑,商品標題
+                    .append($('<img>').attr('src', p.imageUrl).attr('alt', p.name))
+                    //生成div,
+                    .append($('<div>')
+                    //div加上class名,對應CSS用,綁定資料庫哪個id的,商品標題
+                    .addClass('title').text(p.name));
+            $('.products').append(card);
+          });
+        } else {
+          alert("錯誤：" + response.msg);
+        }
+      },
+      error: function(xhr) {
+        console.error(xhr);
+        alert("系統錯誤！");
+      }
+    });
   });
 </script>
 

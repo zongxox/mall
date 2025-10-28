@@ -14,7 +14,13 @@ import org.springframework.web.bind.annotation.RestController;
 public class ProductsController {
     @Autowired
     private ProductsServiceImpl productsServiceImpl;
+    //動態查詢全部商品
+    @GetMapping("/all")
+    public JsonResult selectProducts(){
+        return productsServiceImpl.selectProductsAll(new Products());
+    }
 
+    //基於id查詢商品資訊
     @GetMapping("/{productId}")
     public JsonResult selectProducts(@PathVariable Integer productId){
         return productsServiceImpl.selectProducts(productId);

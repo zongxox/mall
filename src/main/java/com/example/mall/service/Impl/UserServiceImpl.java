@@ -219,12 +219,12 @@ public class UserServiceImpl implements UserService {
         }
 
         if (password == null || password.trim().isEmpty()) {
-            return new JsonResult(StatusCode.EMAIL_EMPTY,"密碼不可為空");
+            return new JsonResult(StatusCode.PASSWORD_EMPTY,"密碼不可為空");
         }
 
 
         if(password.length()<6){
-            return new JsonResult(StatusCode.EMAIL_EMPTY,"請至少輸入6位數,含英文");
+            return new JsonResult(StatusCode.PASSWORD_EMPTY,"請至少輸入6位數,含英文");
         }
 
         int rows = userMapper.delResetTokenTime(reset_token, password);

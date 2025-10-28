@@ -25,7 +25,9 @@ public enum StatusCode {
     EMAIL_ALREADY_VERIFIED(1012, "此帳號已完成驗證，請直接登入"),
     EMAIL_VERIFICATION_FAILED(1013, "驗證失敗"),
     EMAIL_EMPTY(1014, "Email 不可為空"),
-    PASSWORD_UPDATE_FAILED(1015, "密碼更新失敗");
+    PASSWORD_EMPTY(1015, "密碼不可為空"),
+    PASSWORD_UPDATE_FAILED(1016, "密碼更新失敗"),
+    PRODUCTS_FAIL(1017,"目前沒有商品資料");
     private Integer code; //回應狀態碼
     private String msg; //回應狀態信息結果
 
