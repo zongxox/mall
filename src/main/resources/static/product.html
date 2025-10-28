@@ -315,7 +315,7 @@
                         }
 
                         //+號點擊事件
-                        $("#plus").on("click", function () {
+                        $("#plus").off("click").on("click", function () {
                             //抓尺寸點擊事件,存放到selectedSize物件
                             const selectedSize = $("#s-xs:checked, #s-s:checked");
                             // 這裡才是正確庫存值
@@ -342,7 +342,7 @@
                         });
 
                         //-號點擊事件
-                        $("#minus").on("click", function () {
+                        $("#minus").off("click").on("click", function () {
                             if (qty > 0) qty--;
                             $("#qty-display").text(qty);
                         });

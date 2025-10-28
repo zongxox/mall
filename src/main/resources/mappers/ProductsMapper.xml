@@ -15,7 +15,7 @@
                image_url3,
                created_time,
                updated_time
-        FROM products;
+        FROM products
     </select>
 
     <!--基於id查詢商品資訊-->
@@ -30,13 +30,13 @@
                created_time,
                updated_time
         FROM products
-        WHERE id = #{productId};
+        WHERE id = #{productId}
     </select>
 
     <!--查詢庫存顏色尺寸-->
     <select id="selectProductsVariant" resultType="com.example.mall.entity.ProductVariant">
         SELECT product_id, color, size, stock, created_time
         FROM product_variants
-        WHERE product_id = #{productId};
+        WHERE product_id = #{productId}
     </select>
 </mapper>
