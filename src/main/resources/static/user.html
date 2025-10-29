@@ -506,7 +506,7 @@
     </main>
 </div>
 
-<!-- jQuery -->
+
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script>
 
@@ -516,8 +516,8 @@
             event.preventDefault();//阻止表單送出
             const url = "/user/logout";
             $.ajax({
-                url: url,    // 目標後端URL
-                type: "GET",           // 或 "POST"、"PUT"、"DELETE"
+                url: url,
+                type: "GET",
                 success: function (response) {
                     if (response.code === 200) {
                         window.location.href = "login.html"
@@ -534,11 +534,11 @@
 
         //登入後顯示會員資料
         $(function () {
-            // 2. 發送AJAX請求
+
             const url = "/user/userInformation";
             $.ajax({
-                url: url,    // 目標後端URL
-                type: "GET",           // 或 "POST"、"PUT"、"DELETE"
+                url: url,
+                type: "GET",
                 success: function (response) {
                     if (response.code === 200) {
                         const user = response.data;
@@ -562,16 +562,6 @@
         $(function () {
             $("#toEditBtn").on("click", function (event) {
                 event.preventDefault();//阻止表單送出
-                //從個人資料顯示區取資料
-                // const name = $("#name").text().trim();
-                // const email = $("#email").text().trim();
-                // const phone = $("#phone").text().trim();
-
-                //再填入輸入框變成預設&可作可不做
-                // $("#f-name").val(name);
-                // $("#f-email").val(email);
-                // $("#f-phone").val(phone);
-
                 //更新標題
                 $("#pageTitle").text("修改會員資料");   //修改標題
                 $(".view").attr("hidden", true);      // 全部隱藏
@@ -609,14 +599,13 @@
                     return; // 終止執行，不發送 AJAX
                 }
 
-                // 2. 發送AJAX請求
                 const url = "/user/updateUser";
 ;
                 $.ajax({
-                    url: url,    // 目標後端URL
-                    type: "POST",           // 或 "POST"、"PUT"、"DELETE"
-                    dataType: "json",      // 預期回傳資料型態
-                    contentType: "application/json", // (POST才需要)
+                    url: url,
+                    type: "POST",
+                    dataType: "json",
+                    contentType: "application/json",
                     data: JSON.stringify(data),
                     success: function (response) {
                         if (response.code === 200) {
@@ -627,15 +616,12 @@
                         }
                     },
                     error: function (xhr) {
-                        // 4. 失敗的話會執行這裡
                         console.error(xhr);
                         alert("系統錯誤！");
                     }
                 });
             });
         });
-
-
     });
 </script>
 </body>

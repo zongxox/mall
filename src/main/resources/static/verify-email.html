@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <title>購物商城 驗證信箱</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <!-- 可換你自己的字型 -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;600;700&display=swap" rel="stylesheet">
@@ -88,7 +87,7 @@
   </div>
 </main>
 
-<!-- jQuery -->
+
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script>
   (function() {
@@ -132,15 +131,15 @@
     // 顯示「驗證中」狀態
     set("loading","驗證中","請稍後,我們正在驗證你的信箱");
 
-    // 使用 jQuery Ajax 呼叫後端 API 驗證信箱
+    //驗證信箱
     const url = "user/verify-email";
     $.ajax({
-      url: url,  // 後端 API 路徑
-      method: 'GET',             // 使用 GET 請求
-      dataType: 'json',          // 預期回傳 JSON 格式
-      data: { emailVerifyToken: token }, // 傳送的參數
+      url: url,
+      method: 'GET',
+      dataType: 'json',
+      data: { emailVerifyToken: token },
       success:function f(response) {
-        if(response.code===200){//後端回應200代表驗證成功,否則就失敗
+        if(response.code===200){
           set("success", "驗證成功", "你的信箱已完成驗證");
         }else {
           set("error", "驗證失敗","無效或已使用的驗證連結")

@@ -74,7 +74,7 @@
         <a class="login-link" href="login.html">已有帳號？前往登入 →</a>
       </div>
 
-      <!-- jQuery 接管表單 -->
+      <!--註冊表單-->
       <form id="regForm" novalidate>
         <div class="field">
           <label for="account">帳號</label>
@@ -129,13 +129,12 @@
   </section>
 </main>
 
-<!-- jQuery -->
+
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script>
   $(function() {
     $("form").on("submit",function (event) {
       event.preventDefault();//阻止表單送出
-      //設置api路徑
       const url = "/user/saveUser";
       const data = {
       account:$("#account").val().trim(),
@@ -157,18 +156,17 @@
         $("#msg").text("email格式不對");
         return;
       }
-      // 2. 發送AJAX請求
+
       $.ajax({
-        url: url,    // 目標後端URL
-        type: "POST",           // 或 "POST"、"PUT"、"DELETE"
-        dataType: "json",      // 預期回傳資料型態
-        contentType: "application/json", // (POST才需要)
-        data: JSON.stringify(data), //把data往後端送
+        url: url,
+        type: "POST",
+        dataType: "json",
+        contentType: "application/json",
+        data: JSON.stringify(data),
         success: function(response) {
           //先判斷是否成功
           if (response.code === 200) {
             //在標籤id為msg的裡面顯示成功訊息
-            // 3. 成功的話會執行這裡
             $("#msg").text("註冊成功,請前往信箱驗證");
             alert("註冊成功請前往信箱進行驗證");
             window.location.href="/login.html";
@@ -177,7 +175,6 @@
           }
         },
         error: function(xhr) {
-          // 4. 失敗的話會執行這裡
           console.error(xhr);
           alert("系統錯誤！");
         }

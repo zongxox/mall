@@ -191,7 +191,7 @@
         <a class="link" href="reg.html">還沒有帳號？前往註冊 →</a>
     </div>
 
-    <!-- 加上 id 方便 jQuery 綁定；action 只作參考，實際用 Ajax -->
+    <!-- 登入表單-->
     <form id="loginForm" action="/login" method="post" novalidate>
         <div class="field">
             <label for="account">帳號</label>
@@ -230,24 +230,21 @@
             };
             const url = "user/login";
 
-            // 2. 發送AJAX請求
             $.ajax({
-                url: url,    // 目標後端URL
-                type: "POST",           // 或 "POST"、"PUT"、"DELETE"
-                dataType: "json",      // 預期回傳資料型態
-                contentType: "application/json", // (POST才需要)
+                url: url,
+                type: "POST",
+                dataType: "json",
+                contentType: "application/json",
                 data: JSON.stringify(data),
                 success: function (response) {
-                    // 3. 成功的話會執行這裡
                     if (response.code === 200) {
                         alert("登入成功");
-                        window.location.href = "user.html";
+                        window.location.href = "index.html";
                     } else {
                         alert("登入失敗");
                     }
                 },
                 error: function (xhr) {
-                    // 4. 失敗的話會執行這裡
                     console.error(xhr);
                     alert("系統錯誤！");
                 }

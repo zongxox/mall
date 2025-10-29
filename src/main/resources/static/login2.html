@@ -158,10 +158,10 @@
           }
           const url = "/user/sendResetPasswordEmail";
           $.ajax({
-            url: url,    // 目標後端URL
-            type: "POST",           // 或 "POST"、"PUT"、"DELETE"
-            dataType: "json",      // 預期回傳資料型態
-            contentType: "application/json", // (POST才需要)
+            url: url,
+            type: "POST",
+            dataType: "json",
+            contentType: "application/json",
             data: JSON.stringify({email:data}),
             success: function(response) {
               if (response.code === 200) {
@@ -172,7 +172,6 @@
               }
             },
             error: function(xhr) {
-              // 4. 失敗的話會執行這裡
               console.error(xhr);
               alert("系統錯誤！");
             }
