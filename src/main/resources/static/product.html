@@ -412,11 +412,11 @@
                     $(".img-main img").attr("src", p.imageUrl);
                     $("#img1").attr("src", p.imageUrl2);
                     $("#img2").attr("src", p.imageUrl3);
+
                     //數量初始
                     let qty = 0;
-
-
                     const variants = p.variants;//先從後端傳過來的商品productId,顏色,尺寸,庫存資訊
+
                     //點擊顏色按鈕後執行,重新給庫存值
                     $("#c-black, #c-white, #c-pink").on("change", function () {
                         let selectColor;
@@ -433,7 +433,6 @@
                         //先清空舊的庫存
                         $("#s-xs").removeData("stock");
                         $("#s-s").removeData("stock");
-
 
                         //點擊顏色後初始化
                         qty = 0;
@@ -491,89 +490,74 @@
                             $("#msg-box").hide();
                             $("#qty-display").text(qty)
                         }
-
-                        //+號點擊事件
-                        $("#plus").off("click").on("click", function () {
-                            //抓尺寸點擊事件,存放到selectedSize物件
-                            const selectedSize = $("#s-xs:checked, #s-s:checked");
-                            // 這裡才是正確庫存值
-                            const stock = selectedSize.data("stock");
-                            //抓取顏色的點擊事件checked,存到selectedColor
-                            const selectedColor = $("#c-black:checked, #c-white:checked, #c-pink:checked");
-
-                            //判斷顏色跟尺寸是否有選取按鈕
-                            if (selectedColor.length === 0 || selectedSize.length === 0) {
-                                $("#msg-box").text("請先選取顏色！").show();
-                                $("#plus, #minus, #addToCart, #buyNow").hide();
-                                return; //結束事件，不往下執行
-                            }
-
-                            //判斷是否超過庫存上限
-                            if (qty < stock) {
-                                qty++;
-                                $("#qty-display").text(qty);
-                                $("#msg-box").hide();
-                            } else {
-                                // 已達庫存上限 不再增加
-                                $("#msg-box").text("已達庫存上限!!").show();
-                            }
-                        });
-
-                        //-號點擊事件
-                        $("#minus").off("click").on("click", function () {
-                            if (qty > 0) qty--;
-                            $("#qty-display").text(qty);
-                        });
-
-                        //點擊加入購物車addToCart,要先判斷有沒有登入,將顏色,尺寸,數量存到購物車數據庫
-                        $("#addToCart").on("click", function () {
-                            const selectedSize = $("input[name='size']:checked");
-                            const variantId = selectedSize.data("variantId"); //取得顏色循環中綁定的商品規則id
-                            const qty = parseInt($("#qty-display").text());//取得購買數量
-
-                            //判斷點購物車前有沒有顏色與尺寸
-                            // if (!variantId) {
-                            //     $("#msg-box").text("請先選擇顏色與尺寸！").show();
-                            //     return;
-                            // }
-                            // //判斷點購物車前有沒有數量
-                            // if (isNaN(qty) || qty <= 0) {
-                            //     $("#msg-box").text("請先選擇數量！").show();
-                            //     return;
-                            // }
-                            const data= {
-                                productVariantId:variantId,
-                                quantity:qty
-                            };
-
-                            const url = "/cart/addCart";
-                            $.ajax({
-                                url: url,
-                                type: "POST",
-                                dataType: "json",
-                                contentType: "application/json",
-                                data: JSON.stringify(data),
-                                success: function (response) {
-                                    if (response.code === 200) {
-                                        $("#msg-box").text("商品已加入購物車！").show();
-                                    } else {
-                                        alert("請先登入會員！");
-                                        window.location.href = "/login.html";
-                                    }
-                                },
-                                error: function (xhr) {
-                                    console.error(xhr);
-                                    alert("系統錯誤！");
-                                }
-                            });
-                        });
-
-
-                        //點立即購買buyNow,要先判斷有沒有登入,將顏色,尺寸,數量存到購物車數據庫裡面
-
-
                     });
 
+                    //+號點擊事件
+                    $("#plus").off("click").on("click", function () {
+                        //抓尺寸點擊事件,存放到selectedSize物件
+                        const selectedSize = $("#s-xs:checked, #s-s:checked");
+                        // 這裡才是正確庫存值
+                        const stock = selectedSize.data("stock");
+                        //抓取顏色的點擊事件checked,存到selectedColor
+                        const selectedColor = $("#c-black:checked, #c-white:checked, #c-pink:checked");
+
+                        //判斷顏色跟尺寸是否有選取按鈕
+                        if (selectedColor.length === 0 || selectedSize.length === 0) {
+                            $("#msg-box").text("請先選取顏色！").show();
+                            $("#plus, #minus, #addToCart, #buyNow").hide();
+                            return; //結束事件，不往下執行
+                        }
+
+                        //判斷是否超過庫存上限
+                        if (qty < stock) {
+                            qty++;
+                            $("#qty-display").text(qty);
+                            $("#msg-box").hide();
+                        } else {
+                            // 已達庫存上限 不再增加
+                            $("#msg-box").text("已達庫存上限!!").show();
+                        }
+                    });
+
+                    //-號點擊事件
+                    $("#minus").off("click").on("click", function () {
+                        if (qty > 0) qty--;
+                        $("#qty-display").text(qty);
+                    });
+
+                    //點擊加入購物車addToCart,要先判斷有沒有登入,將顏色,尺寸,數量存到購物車數據庫
+                    $("#addToCart").on("click", function () {
+                        const selectedSize = $("input[name='size']:checked");
+                        const variantId = selectedSize.data("variantId"); //取得顏色循環中綁定的商品規則id
+                        const qty = parseInt($("#qty-display").text());//取得購買數量
+
+                        const data= {
+                            productVariantId:variantId,
+                            quantity:qty
+                        };
+
+                        const url = "/cart/addCart";
+                        $.ajax({
+                            url: url,
+                            type: "POST",
+                            dataType: "json",
+                            contentType: "application/json",
+                            data: JSON.stringify(data),
+                            success: function (response) {
+                                if (response.code === 200) {
+                                    $("#msg-box").text("商品已加入購物車！").show();
+                                } else {
+                                    alert("請先登入會員！");
+                                    window.location.href = "/login.html";
+                                }
+                            },
+                            error: function (xhr) {
+                                console.error(xhr);
+                                alert("系統錯誤！");
+                            }
+                        });
+                    });
+                //點立即購買buyNow,要先判斷有沒有登入,將顏色,尺寸,數量存到購物車數據庫裡面
                 } else {
                     alert("查無商品," + response.msg);
                 }
