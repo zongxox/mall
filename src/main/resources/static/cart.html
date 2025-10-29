@@ -202,7 +202,25 @@
 </div>
 
 <script>
-
+    $(function() {
+        const url = "/cart/getCart";
+        $.ajax({
+            url: url,
+            type: "GET",
+            dataType: "json",
+            success: function(response) {
+                const tbody = $("#cart-tbody")
+                if (response.code ===200) {
+                    const items = response.data;
+                } else {
+                }
+            },
+            error: function(xhr) {
+                console.error(xhr);
+                alert("系統錯誤！");
+            }
+        });
+    });
 </script>
 
 </body>

@@ -5,18 +5,24 @@ import com.example.mall.response.JsonResult;
 import com.example.mall.service.Impl.CartItemsServiceImpl;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/cart")
 public class CartItemsController {
     @Autowired
     private CartItemsServiceImpl cartItemsService;
+
+    //加入購物車表中
     @PostMapping("/addCart")
     public JsonResult addCart(@RequestBody CartItemsDTO cartItemsDTO, HttpSession session){
         return cartItemsService.insertCart(cartItemsDTO, session);
     }
+
+    //透過登入狀態的userid顯示購物車商品
+    @GetMapping("/getCart")
+    public JsonResult selectByUserId(HttpSession session){
+        return cartItemsService.selectByUserId(session);
+    }
+
 }

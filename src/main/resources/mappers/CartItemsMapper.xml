@@ -3,9 +3,39 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.mall.mapper.CartItemsMapper">
-<!--加入購物車-->
+    <!--加入購物車表中-->
     <insert id="insertCart">
         INSERT INTO cart_items (user_id, product_variant_id, quantity, created_time)
-        VALUES (#{userId},#{productVariantId},#{quantity},now())
+        VALUES (#{userId}, #{productVariantId}, #{quantity}, now())
     </insert>
+
+<!--透過登入狀態的userid顯示購物車商品-->
+    <select id="selectByUserId" resultMap="CartItemMap">
+        SELECT c.id AS cart_item_id,
+               c.quantity,
+               p.id AS product_id,
+               p.name AS product_name,
+               p.price AS product_price,
+               p.image_url AS product_image,
+               pv.id AS product_variant_id,
+               pv.color AS variant_color,
+               pv.size AS variant_size,
+               pv.stock
+        FROM cart_items c
+                 LEFT JOIN product_variants pv ON c.product_variant_id = pv.id
+                 LEFT JOIN products p ON p.id = pv.product_id
+        WHERE c.user_id = #{userId}
+    </select>
+    <resultMap id="CartItemMap" type="com.example.mall.vo.CartItemsVO">
+        <id column="cart_item_id" property="cartItemId"></id>
+        <result column="quantity" property="quantity"></result>
+        <result column="product_id" property="productId"></result>
+        <result column="product_name" property="productName"></result>
+        <result column="product_price" property="productPrice"></result>
+        <result column="product_image" property="productImage"></result>
+        <result column="product_variant_id" property="productVariantId"></result>
+        <result column="variant_color" property="variantColor"></result>
+        <result column="variant_size" property="variantSize"></result>
+        <result column="stock" property="stock"></result>
+    </resultMap>
 </mapper>
