@@ -445,8 +445,12 @@
                         //只綁目前選取這個顏色的尺寸庫存
                         variants.forEach(v => {
                             if (v.color === selectColor && v.size === 44) {
+                                //綁定商品規格表product_variants的id
+                                //不是product_variants的product_id用於傳遞到後端,取得商品顏色跟尺寸的商品id
+                                $("#s-xs").data("variantId", v.id);
                                 $("#s-xs").data("stock", v.stock);
                             } else if (v.color === selectColor && v.size === 45) {
+                                $("#s-s").data("variantId", v.id);
                                 $("#s-s").data("stock", v.stock);
                             }
                         });
@@ -523,22 +527,25 @@
 
                         //點擊加入購物車addToCart,要先判斷有沒有登入,將顏色,尺寸,數量存到購物車數據庫
                         $("#addToCart").on("click", function () {
-                            //目前選取的顏色,用vlaue去抓取
-                            const color = $("input[name='color']:checked").val();
-                            const size = $("input[name='size']:checked").val();
-                            const qty = parseInt($("#qty-display").text());
-                            console.log("目前顏色:", color, "尺寸:", size, "數量:", qty);
+                            const selectedSize = $("input[name='size']:checked");
+                            const variantId = selectedSize.data("variantId"); //取得顏色循環中綁定的商品規則id
+                            const qty = parseInt($("#qty-display").text());//取得購買數量
 
-                            // 取得當前商品ID（假設在網址上帶 id 參數）
-                            const params = new URLSearchParams(window.location.search);
-                            const productId = params.get("id");
-
+                            //判斷點購物車前有沒有顏色與尺寸
+                            // if (!variantId) {
+                            //     $("#msg-box").text("請先選擇顏色與尺寸！").show();
+                            //     return;
+                            // }
+                            // //判斷點購物車前有沒有數量
+                            // if (isNaN(qty) || qty <= 0) {
+                            //     $("#msg-box").text("請先選擇數量！").show();
+                            //     return;
+                            // }
                             const data= {
-                                productId: productId,
-                                color: color,
-                                size: size,
-                                quantity: qty
+                                productVariantId:variantId,
+                                quantity:qty
                             };
+
                             const url = "/cart/addCart";
                             $.ajax({
                                 url: url,

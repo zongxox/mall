@@ -1,12 +1,12 @@
 package com.example.mall.service.Impl;
 
-import com.example.mall.dto.UserDto;
+import com.example.mall.dto.UserDTO;
 import com.example.mall.entity.User;
 import com.example.mall.mapper.UserMapper;
 import com.example.mall.response.JsonResult;
 import com.example.mall.response.StatusCode;
 import com.example.mall.service.UserService;
-import com.example.mall.vo.UserVo;
+import com.example.mall.vo.UserVO;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +27,8 @@ public class UserServiceImpl implements UserService {
 
     //註冊
     @Override
-    public JsonResult saveUser(UserDto userDto) {
-        String email = userDto.getEmail();//前端傳送過來的email
+    public JsonResult saveUser(UserDTO userDTO) {
+        String email = userDTO.getEmail();//前端傳送過來的email
 
         //去除空白跟判斷是否為空值
         if(email == null || email.trim().isEmpty()){
@@ -45,7 +45,7 @@ public class UserServiceImpl implements UserService {
         }
 
         //查詢數據庫是否有該帳號
-        User userByAccount = userMapper.getUserByAccount(userDto.getAccount());
+        User userByAccount = userMapper.getUserByAccount(userDTO.getAccount());
         if(userByAccount != null){
             return new JsonResult(StatusCode.ACCOUNT_ALREADY_EXISTS,"帳號已存在");
         }
@@ -61,7 +61,7 @@ public class UserServiceImpl implements UserService {
         String email_verify_token = UUID.randomUUID().toString();//設定token
         LocalDateTime email_verify_token_expire = LocalDateTime.now().plusMinutes(30);
 
-        BeanUtils.copyProperties(userDto,user);//將前端表單傳過來的值複製到user裡面
+        BeanUtils.copyProperties(userDTO,user);//將前端表單傳過來的值複製到user裡面
         user.setIsAdmin(false);//設定是否是管理員
         user.setEmailVerified(false);//email是否驗證
         user.setCreatedTime(LocalDateTime.now());//註冊時創建時間
@@ -81,8 +81,8 @@ public class UserServiceImpl implements UserService {
 
     //驗證token及信箱
     @Override
-    public JsonResult verifyEmail(UserDto userDto) {
-        String email_verify_token = userDto.getEmailVerifyToken();//獲取接收到的token
+    public JsonResult verifyEmail(UserDTO userDTO) {
+        String email_verify_token = userDTO.getEmailVerifyToken();//獲取接收到的token
 
         //查詢數據庫的token過期跟是否存在email是否驗證過
         User tokenTime = userMapper.getTokenTime(email_verify_token);
@@ -113,29 +113,29 @@ public class UserServiceImpl implements UserService {
 
     //登入查詢帳號密碼是否正確
     @Override
-    public JsonResult selectAccountPassword(UserDto userDto, HttpSession session) {
+    public JsonResult selectAccountPassword(UserDTO userDto, HttpSession session) {
         User user = userMapper.selectAccountPassword(userDto);//將前端傳遞過來的帳號密碼跟數據庫做比對
         if(user == null){//判斷查詢出來的結果是否為空
             return new JsonResult(StatusCode.ACCOUNT_PASSWORD_ERROR,"帳號密碼錯誤");
         }
-        UserVo vo = new UserVo();//創建user返回前端的對象
+        UserVO vo = new UserVO();//創建user返回前端的對象
         BeanUtils.copyProperties(user, vo);//將查詢到的對象存到UserVo裡面
-        session.setAttribute("sessionVo", vo);//再把登入查詢到的vo對象存到session對象裡面
+        session.setAttribute("sessionVO", vo);//再把登入查詢到的vo對象存到session對象裡面
         return JsonResult.ok();
     }
 
     //利用登入存的session去顯示會員資料
     @Override
     public JsonResult userByInformation(HttpSession session) {
-        UserVo vo = (UserVo) session.getAttribute("sessionVo");
+        UserVO vo = (UserVO) session.getAttribute("sessionVO");
         return JsonResult.ok(vo);
     }
 
     //修改會員資料
     @Override
-    public JsonResult updateUser(UserDto userDto, HttpSession session) {
+    public JsonResult updateUser(UserDTO userDto, HttpSession session) {
         //先重登入後的session取得會員id
-        UserVo sessionVo =(UserVo) session.getAttribute("sessionVo");
+        UserVO sessionVo =(UserVO) session.getAttribute("sessionVO");
         if(sessionVo == null){//判斷session裡面是不是沒有用戶
             return new JsonResult(StatusCode.NOT_LOGIN,"尚未登入");
         }
@@ -149,9 +149,9 @@ public class UserServiceImpl implements UserService {
         if(row>0){//判斷是否修改成功
             //修改成功的話先查詢,再將資料返回給前端
             User userById = userMapper.userById(user.getId());//將修改成功的並且複製進去的id拿取查詢
-            UserVo vo = new UserVo();//創建返回對象
+            UserVO vo = new UserVO();//創建返回對象
             BeanUtils.copyProperties(userById, vo);//將查詢到的結果複製給vo
-            session.setAttribute("sessionVo", vo);//將結果設置到session裡面
+            session.setAttribute("sessionVO", vo);//將結果設置到session裡面
             return JsonResult.ok(vo);//將vo返回給前端
         }
         return new JsonResult(StatusCode.OPERATION_FAILED,"操作失敗");
@@ -159,8 +159,8 @@ public class UserServiceImpl implements UserService {
 
     //忘記密碼
     @Override
-    public JsonResult resetPwd(UserDto userDto) {
-        String email = userDto.getEmail();
+    public JsonResult resetPwd(UserDTO userDTO) {
+        String email = userDTO.getEmail();
         //判斷email是否為空
         if(email == null){
             return new JsonResult(StatusCode.EMAIL_EMPTY,"email不可為空");
@@ -183,7 +183,7 @@ public class UserServiceImpl implements UserService {
         LocalDateTime resetTokenExpire = LocalDateTime.now().plusMinutes(30);
         //LocalDateTime resetTokenExpire = LocalDateTime.now().plusSeconds(1); 測試用
         User user = new User();
-        BeanUtils.copyProperties(userDto,user);
+        BeanUtils.copyProperties(userDTO,user);
         user.setResetToken(resetToken);
         user.setResetTokenExpire(resetTokenExpire);
         int rows = userMapper.updateResetTokenTime(user.getEmail(),user.getResetToken(),user.getResetTokenExpire());
@@ -201,7 +201,7 @@ public class UserServiceImpl implements UserService {
 
     //修改密碼並判斷token是否過期或無效
     @Override
-    public JsonResult getResetPwd(UserDto userDto) {
+    public JsonResult getResetPwd(UserDTO userDto) {
         String reset_token = userDto.getResetToken();
         User resetTokenTime = userMapper.getResetTokenTime(reset_token);
         String password = userDto.getPassword();

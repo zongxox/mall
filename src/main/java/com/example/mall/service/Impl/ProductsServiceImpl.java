@@ -6,7 +6,7 @@ import com.example.mall.mapper.ProductsMapper;
 import com.example.mall.response.JsonResult;
 import com.example.mall.response.StatusCode;
 import com.example.mall.service.ProductsService;
-import com.example.mall.vo.ProductsVo;
+import com.example.mall.vo.ProductsVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,8 +22,8 @@ public class ProductsServiceImpl implements ProductsService {
     @Override
     public JsonResult selectProductsAll(Products products) {
         List<Products> list = productsMapper.selectProductsAll(products);
-        if(list == null || list.isEmpty()){
-            return new JsonResult(StatusCode.PRODUCTS_FAIL,"目前沒有商品資料");
+        if (list == null || list.isEmpty()) {
+            return new JsonResult(StatusCode.PRODUCTS_FAIL, "目前沒有商品資料");
         }
         return JsonResult.ok(list);
     }
@@ -35,14 +35,14 @@ public class ProductsServiceImpl implements ProductsService {
         Products products1 = productsMapper.selectProducts(productId);
 
         //判斷商品資訊是不是空的
-        if(products1==null){
-            return new JsonResult(StatusCode.PRODUCTS_FAIL,"沒有此商品");
+        if (products1 == null) {
+            return new JsonResult(StatusCode.PRODUCTS_FAIL, "沒有此商品");
         }
 
         //基於productId查詢尺寸庫存顏色
         List<ProductVariant> productVariants = productsMapper.selectProductsVariant(productId);
 
-        ProductsVo productsVO = new ProductsVo();
+        ProductsVO productsVO = new ProductsVO();
         //將商品資訊複製到vo對象,並返回給前端
         BeanUtils.copyProperties(products1, productsVO);
         //將查詢到的商品id,尺寸,庫存,顏色,設置到vo對象

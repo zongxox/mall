@@ -7,7 +7,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class ProductsVo {
+public class ProductsVO {
 
   private String name;
   private String description;

@@ -1,6 +1,6 @@
 package com.example.mall.controller;
 
-import com.example.mall.dto.UserDto;
+import com.example.mall.dto.UserDTO;
 import com.example.mall.response.JsonResult;
 import com.example.mall.service.Impl.UserServiceImpl;
 import jakarta.servlet.http.HttpSession;
@@ -16,20 +16,20 @@ public class UserController {
 
     //註冊
     @PostMapping("/saveUser")
-    public JsonResult saveUser(@RequestBody UserDto userDto){
-        return userServiceImpl.saveUser(userDto);
+    public JsonResult saveUser(@RequestBody UserDTO userDTO){
+        return userServiceImpl.saveUser(userDTO);
     }
 
     //驗證token及信箱
     @GetMapping("/verify-email")
-    public JsonResult verifyEmail(UserDto userDto){
-        return userServiceImpl.verifyEmail(userDto);
+    public JsonResult verifyEmail(UserDTO userDTO){
+        return userServiceImpl.verifyEmail(userDTO);
     }
 
     //登入查詢帳號密碼是否正確,並保存session
     @PostMapping("/login")
-    public JsonResult selectAccountPassword(@RequestBody UserDto userDto, HttpSession session){
-        return userServiceImpl.selectAccountPassword(userDto,session);
+    public JsonResult selectAccountPassword(@RequestBody UserDTO userDTO, HttpSession session){
+        return userServiceImpl.selectAccountPassword(userDTO,session);
     }
 
     //登出
@@ -47,19 +47,19 @@ public class UserController {
 
     //修改會員資料
     @PostMapping("/updateUser")
-    public JsonResult updateUser(@RequestBody UserDto userDto,HttpSession session){
-        return userServiceImpl.updateUser(userDto,session);
+    public JsonResult updateUser(@RequestBody UserDTO userDTO, HttpSession session){
+        return userServiceImpl.updateUser(userDTO,session);
     }
     //忘記密碼接收輸入框的email
     @PostMapping("/sendResetPasswordEmail")
-    public JsonResult sendResetPasswordEmail(@RequestBody UserDto userDto){
-        return userServiceImpl.resetPwd(userDto);
+    public JsonResult sendResetPasswordEmail(@RequestBody UserDTO userDTO){
+        return userServiceImpl.resetPwd(userDTO);
     }
 
     //
     @PostMapping("/resetPassword")
-    public JsonResult getResetPwd(@RequestBody UserDto userDto){
-        return userServiceImpl.getResetPwd(userDto);
+    public JsonResult getResetPwd(@RequestBody UserDTO userDTO){
+        return userServiceImpl.getResetPwd(userDTO);
     }
 
 }

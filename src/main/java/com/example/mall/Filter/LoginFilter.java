@@ -1,6 +1,6 @@
 package com.example.mall.Filter;
 
-import com.example.mall.vo.UserVo;
+import com.example.mall.vo.UserVO;
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,7 +22,7 @@ public class LoginFilter implements Filter {
 
         HttpSession session = req.getSession();
 
-        UserVo sessionVo = (UserVo) session.getAttribute("sessionVo");
+        UserVO sessionVo = (UserVO) session.getAttribute("sessionVO");
         if(sessionVo==null){
             res.sendRedirect("login.html");
             return;

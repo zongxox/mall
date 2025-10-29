@@ -1,8 +1,7 @@
 package com.example.mall.mapper;
 
-import com.example.mall.dto.UserDto;
+import com.example.mall.dto.UserDTO;
 import com.example.mall.entity.User;
-import com.example.mall.vo.UserVo;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.time.LocalDateTime;
@@ -19,7 +18,7 @@ public interface UserMapper {
 
     int delTokenTime(String emailVerifyToken);//清空註冊時token跟時間
 
-    User selectAccountPassword(UserDto userDto);//登入查詢帳號密碼是否正確
+    User selectAccountPassword(UserDTO userDto);//登入查詢帳號密碼是否正確
 
     int updateUser(User user);//修改會員資料
 
