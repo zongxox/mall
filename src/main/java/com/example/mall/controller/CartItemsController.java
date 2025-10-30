@@ -11,18 +11,23 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/cart")
 public class CartItemsController {
     @Autowired
-    private CartItemsServiceImpl cartItemsService;
+    private CartItemsServiceImpl cartItemsServiceImpl;
 
     //加入購物車表中
     @PostMapping("/addCart")
     public JsonResult addCart(@RequestBody CartItemsDTO cartItemsDTO, HttpSession session){
-        return cartItemsService.insertCart(cartItemsDTO, session);
+        return cartItemsServiceImpl.insertCart(cartItemsDTO, session);
     }
 
     //透過登入狀態的userid顯示購物車商品
     @GetMapping("/getCart")
     public JsonResult selectByUserId(HttpSession session){
-        return cartItemsService.selectByUserId(session);
+        return cartItemsServiceImpl.selectByUserId(session);
     }
 
+    //刪除購物車商品
+    @DeleteMapping("/del")
+    public JsonResult deleteCart(@RequestBody CartItemsDTO cartItemsDTO,HttpSession session){
+        return cartItemsServiceImpl.deleteCart(cartItemsDTO,session);
+    }
 }

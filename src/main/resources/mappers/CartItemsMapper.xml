@@ -9,17 +9,17 @@
         VALUES (#{userId}, #{productVariantId}, #{quantity}, now())
     </insert>
 
-<!--透過登入狀態的userid顯示購物車商品-->
+    <!--透過登入狀態的userid顯示購物車商品-->
     <select id="selectByUserId" resultMap="CartItemMap">
-        SELECT c.id AS cart_item_id,
+        SELECT c.id        AS cart_item_id,
                c.quantity,
-               p.id AS product_id,
-               p.name AS product_name,
-               p.price AS product_price,
+               p.id        AS product_id,
+               p.name      AS product_name,
+               p.price     AS product_price,
                p.image_url AS product_image,
-               pv.id AS product_variant_id,
-               pv.color AS variant_color,
-               pv.size AS variant_size,
+               pv.id       AS product_variant_id,
+               pv.color    AS variant_color,
+               pv.size     AS variant_size,
                pv.stock
         FROM cart_items c
                  LEFT JOIN product_variants pv ON c.product_variant_id = pv.id
@@ -38,4 +38,9 @@
         <result column="variant_size" property="variantSize"></result>
         <result column="stock" property="stock"></result>
     </resultMap>
+
+<!--刪除購物車商品-->
+    <delete id="deleteCart">
+        DELETE FROM cart_items WHERE user_id = #{userId} AND id = #{cartItemId}
+    </delete>
 </mapper>

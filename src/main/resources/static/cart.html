@@ -6,165 +6,315 @@
     <script src="js/header.js"></script>
     <title>購物商城 購物車</title>
     <style>
-        :root{
-            --bg:#0f1220; --panel:#161a2f; --text:#e9eef7; --muted:#b6bdd1;
-            --brand:#7c5cff; --brand2:#6ae3ff; --success:#34d399; --danger:#ff6b6b;
-            --ring:0 0 0 .16rem rgba(106,227,255,.45); --radius:16px; --shadow:0 10px 30px rgba(0,0,0,.25);
+        :root {
+            --bg: #0f1220;
+            --panel: #161a2f;
+            --text: #e9eef7;
+            --muted: #b6bdd1;
+            --brand: #7c5cff;
+            --brand2: #6ae3ff;
+            --success: #34d399;
+            --danger: #ff6b6b;
+            --ring: 0 0 0 .16rem rgba(106, 227, 255, .45);
+            --radius: 16px;
+            --shadow: 0 10px 30px rgba(0, 0, 0, .25);
         }
-        *{box-sizing:border-box}
-        html,body{height:100%}
-        body{
-            margin:0;
-            font-family:'Noto Sans TC',system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;
-            color:var(--text);
-            background:
-                    radial-gradient(800px 350px at 85% 0%, rgba(106,227,255,.16), transparent 60%),
-                    radial-gradient(800px 350px at 0% 10%, rgba(124,92,255,.18), transparent 60%),
-                    var(--bg);
+
+        * {
+            box-sizing: border-box
+        }
+
+        html, body {
+            height: 100%
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Noto Sans TC', system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial;
+            color: var(--text);
+            background: radial-gradient(800px 350px at 85% 0%, rgba(106, 227, 255, .16), transparent 60%),
+            radial-gradient(800px 350px at 0% 10%, rgba(124, 92, 255, .18), transparent 60%),
+            var(--bg);
         }
 
         /* 主要區塊 */
-        .main-content{
-            max-width:1100px;
-            margin:32px auto;
-            padding:0 20px;
+        .main-content {
+            max-width: 1100px;
+            margin: 32px auto;
+            padding: 0 20px;
         }
 
         /* 玻璃面板樣式 */
         .cart-management,
-        .check-all-body{
-            background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
-            border:1px solid rgba(255,255,255,.12);
-            border-radius:var(--radius);
-            box-shadow:var(--shadow);
-            padding:24px;
+        .check-all-body {
+            background: linear-gradient(180deg, rgba(255, 255, 255, .06), rgba(255, 255, 255, .03));
+            border: 1px solid rgba(255, 255, 255, .12);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 24px;
             backdrop-filter: blur(6px);
         }
 
         /* 區塊標題 */
-        .cart-table h3{
-            margin:0 0 12px;
-            font-size:22px; font-weight:700;
-            text-align:center;
+        .cart-table h3 {
+            margin: 0 0 12px;
+            font-size: 22px;
+            font-weight: 700;
+            text-align: center;
         }
-        .cart-table p{ color:var(--muted); }
+
+        .cart-table p {
+            color: var(--muted);
+        }
 
         /* 按鈕（同驗證頁漸層膠囊） */
-        .btn{
-            appearance:none; border:0; outline:0; cursor:pointer;
-            padding:12px 18px; border-radius:999px; font-weight:800; font-size:16px;
-            color:#0b0f1f; background:linear-gradient(90deg, var(--brand) 0%, var(--brand2) 100%);
-            transition:transform .05s ease, box-shadow .2s ease, opacity .2s ease;
+        .btn {
+            appearance: none;
+            border: 0;
+            outline: 0;
+            cursor: pointer;
+            padding: 12px 18px;
+            border-radius: 999px;
+            font-weight: 800;
+            font-size: 16px;
+            color: #0b0f1f;
+            background: linear-gradient(90deg, var(--brand) 0%, var(--brand2) 100%);
+            transition: transform .05s ease, box-shadow .2s ease, opacity .2s ease;
         }
-        .btn:hover{ opacity:.95 }
-        .btn:active{ transform:translateY(1px) }
-        .btn:focus-visible{ box-shadow: var(--ring) }
+
+        .btn:hover {
+            opacity: .95
+        }
+
+        .btn:active {
+            transform: translateY(1px)
+        }
+
+        .btn:focus-visible {
+            box-shadow: var(--ring)
+        }
 
         /* 表格容器 vs 表格本體分開定義，避免衝突 */
-        div.cart-table{ padding:0; background:transparent; box-shadow:none; border:none; }
-        table.cart-table{
-            width:100%;
-            border-collapse:separate; border-spacing:0;
-            background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
-            border:1px solid rgba(255,255,255,.12);
-            border-radius:var(--radius);
-            overflow:hidden;
+        div.cart-table {
+            padding: 0;
+            background: transparent;
+            box-shadow: none;
+            border: none;
+        }
+
+        table.cart-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            background: linear-gradient(180deg, rgba(255, 255, 255, .06), rgba(255, 255, 255, .03));
+            border: 1px solid rgba(255, 255, 255, .12);
+            border-radius: var(--radius);
+            overflow: hidden;
         }
 
         table.cart-table th,
-        table.cart-table td{
-            padding:14px 12px; text-align:left;
-            border-bottom:1px solid rgba(255,255,255,.08);
+        table.cart-table td {
+            padding: 14px 12px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, .08);
         }
 
-        table.cart-table thead th{
-            background:rgba(255,255,255,.04);
-            font-weight:700; color:var(--muted);
+        table.cart-table thead th {
+            background: rgba(255, 255, 255, .04);
+            font-weight: 700;
+            color: var(--muted);
         }
 
-        table.cart-table tbody tr:hover{
-            background:rgba(255,255,255,.03);
+        table.cart-table tbody tr:hover {
+            background: rgba(255, 255, 255, .03);
         }
 
-        table.cart-table tbody tr:last-child td{
-            border-bottom:none;
+        table.cart-table tbody tr:last-child td {
+            border-bottom: none;
         }
 
         /* 商品資訊欄 */
-        .product-info{
-            display:flex; align-items:center; gap:14px;
+        .product-info {
+            display: flex;
+            align-items: center;
+            gap: 14px;
         }
-        .product-info .thumb{
-            width:64px; height:64px; flex:0 0 64px; border-radius:12px;
-            overflow:hidden; border:1px solid rgba(255,255,255,.12);
+
+        .product-info .thumb {
+            width: 64px;
+            height: 64px;
+            flex: 0 0 64px;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, .12);
         }
-        .product-info .thumb img{
-            width:100%; height:100%; object-fit:cover; display:block; border:none;
+
+        .product-info .thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            border: none;
         }
-        .product-info .meta{
-            display:flex; flex-direction:column; gap:2px;
+
+        .product-info .meta {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
         }
-        .product-info .meta .name{ font-weight:600 }
-        .product-info .meta .sub{ color:var(--muted); font-size:13px }
+
+        .product-info .meta .name {
+            font-weight: 600
+        }
+
+        .product-info .meta .sub {
+            color: var(--muted);
+            font-size: 13px
+        }
 
         /* 數量控制（玻璃膠囊） */
-        .quantity-control{
-            display:flex; align-items:center; gap:0;
-            border:1px solid rgba(255,255,255,.16);
-            border-radius:999px; overflow:hidden; width:112px;
-            background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+        .quantity-control {
+            display: flex;
+            align-items: center;
+            gap: 0;
+            border: 1px solid rgba(255, 255, 255, .16);
+            border-radius: 999px;
+            overflow: hidden;
+            width: 112px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, .06), rgba(255, 255, 255, .03));
         }
-        .quantity-button{
-            background:transparent; border:0; font-size:18px; padding:8px 12px; cursor:pointer;
-            color:var(--text);
+
+        .quantity-button {
+            background: transparent;
+            border: 0;
+            font-size: 18px;
+            padding: 8px 12px;
+            cursor: pointer;
+            color: var(--text);
         }
-        .quantity-button:hover{ background:rgba(255,255,255,.06) }
-        .quantity-input{
-            width:48px; text-align:center; border:0; outline:none; background:transparent; color:var(--text); font-size:16px;
+
+        .quantity-button:hover {
+            background: rgba(255, 255, 255, .06)
         }
+
+        .quantity-input {
+            width: 48px;
+            text-align: center;
+            border: 0;
+            outline: none;
+            background: transparent;
+            color: var(--text);
+            font-size: 16px;
+        }
+
         input[type="number"]::-webkit-inner-spin-button,
-        input[type="number"]::-webkit-outer-spin-button{ -webkit-appearance:none; margin:0; }
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
 
         /* 金額 */
-        .price, .subtotal, .currency{ font-variant-numeric: tabular-nums; }
-        .subtotal{ font-weight:700 }
-        .currency{ color:var(--muted); margin:0 0 12px; }
+        .price, .subtotal, .currency {
+            font-variant-numeric: tabular-nums;
+        }
+
+        .subtotal {
+            font-weight: 700
+        }
+
+        .currency {
+            color: var(--muted);
+            margin: 0 0 12px;
+        }
 
         /* 底部總計 */
-        .check-all-body{
-            margin-top:24px; text-align:center;
+        .check-all-body {
+            margin-top: 24px;
+            text-align: center;
         }
-        .total-price{ display:flex; flex-direction:column; align-items:center; gap:12px; }
-        .total-price .currency{ font-size:16px; }
+
+        .total-price {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .total-price .currency {
+            font-size: 16px;
+        }
 
         /* 響應式 */
-        @media (max-width: 860px){
-            table.cart-table thead{ display:none; }
-            table.cart-table, table.cart-table tbody, table.cart-table tr, table.cart-table td{ display:block; width:100%; }
-            table.cart-table tr{ border-bottom:1px solid rgba(255,255,255,.08); padding:10px 12px; }
-            table.cart-table td{
-                border:none; padding:8px 0;
+        @media (max-width: 860px) {
+            table.cart-table thead {
+                display: none;
             }
-            table.cart-table td::before{
-                content:attr(data-label);
-                display:block; color:var(--muted); font-size:12px; margin-bottom:4px;
+
+            table.cart-table, table.cart-table tbody, table.cart-table tr, table.cart-table td {
+                display: block;
+                width: 100%;
             }
-            .product-info .thumb{ width:56px; height:56px; flex-basis:56px; }
-            .check-all-body{ position:sticky; bottom:12px; }
+
+            table.cart-table tr {
+                border-bottom: 1px solid rgba(255, 255, 255, .08);
+                padding: 10px 12px;
+            }
+
+            table.cart-table td {
+                border: none;
+                padding: 8px 0;
+            }
+
+            table.cart-table td::before {
+                content: attr(data-label);
+                display: block;
+                color: var(--muted);
+                font-size: 12px;
+                margin-bottom: 4px;
+            }
+
+            .product-info .thumb {
+                width: 56px;
+                height: 56px;
+                flex-basis: 56px;
+            }
+
+            .check-all-body {
+                position: sticky;
+                bottom: 12px;
+            }
         }
 
         /* 亮色系統偏好 */
-        @media (prefers-color-scheme: light){
-            body{ background:#f6f7fb; color:#121622 }
-            .cart-management, .check-all-body{
-                background:#fff; border:1px solid #e8ecf4; color:#121622;
+        @media (prefers-color-scheme: light) {
+            body {
+                background: #f6f7fb;
+                color: #121622
             }
-            table.cart-table{
-                background:#fff; border:1px solid #e8ecf4;
+
+            .cart-management, .check-all-body {
+                background: #fff;
+                border: 1px solid #e8ecf4;
+                color: #121622;
             }
-            table.cart-table thead th{ background:#f6f8fc; color:#475569; }
-            .product-info .thumb{ border-color:#e8ecf4; }
-            .currency{ color:#556; }
+
+            table.cart-table {
+                background: #fff;
+                border: 1px solid #e8ecf4;
+            }
+
+            table.cart-table thead th {
+                background: #f6f8fc;
+                color: #475569;
+            }
+
+            .product-info .thumb {
+                border-color: #e8ecf4;
+            }
+
+            .currency {
+                color: #556;
+            }
         }
     </style>
 
@@ -195,27 +345,88 @@
     </div>
     <div class="check-all-body" style="text-align: center;">
         <div class="total-price">
-            <p class="currency" >總金額(不含運費)：NT$0</p>
-            <button id="checkout-btn" type="button" class="btn" style="width: 145px; height: 53px; --borRadius: 13;font-size: 16px;">結帳</button>
+            <p class="currency">總金額(不含運費)：NT$0</p>
+            <button id="checkout-btn" type="button" class="btn"
+                    style="width: 145px; height: 53px; --borRadius: 13;font-size: 16px;">結帳
+            </button>
         </div>
     </div>
 </div>
 
 <script>
-    $(function() {
+    $(function () {
         const url = "/cart/getCart";
         $.ajax({
             url: url,
             type: "GET",
             dataType: "json",
-            success: function(response) {
+            success: function (response) {
                 const tbody = $("#cart-tbody")
-                if (response.code ===200) {
-                    const items = response.data;
+                if (response.code === 200) {
+                    const items = response.data;//後端查詢到的數據
+                    let total =0 //初始化總金額
+                    items.forEach(item => {
+                        const subTotal = item.productPrice * item.quantity;// 價格*數量
+                        total += subTotal;//再給到初始化的總金額
+                        //將查詢到的加入購物車資訊放到html元素裡,在放到畫面中
+                        //${item.cartItemId}是每一行商品的購物車id,可以取道cartItemId
+                        $("#cart-tbody").append(`
+                          <tr data-id="${item.cartItemId}">
+                            <td>${item.productId}</td>
+                            <td>${item.productName}</td>
+                            <td>${item.variantColor} / ${item.variantSize}</td>
+                            <td>${item.productPrice}</td>
+                            <td>${item.quantity}</td>
+                            <td>NT$${subTotal}</td>
+                            <td><button type="button" class="btn btn-del" style="width: 145px; height: 53px; --borRadius: 13;font-size: 16px;">刪除</button></td>
+                          </tr>
+                        `)
+                        console.log(item.cartItemId, item.productName);
+                    })
+                    $(".currency").text("總金額(不含運費)：NT$"+total) //價格*庫存 = 顯示總金額
+
+                    //刪除
+                    $(document).on("click",".btn-del",function () {
+                        const tr = $(this).closest("tr");   // 找到這顆按鈕所在的列
+                        const cartItemId = tr.data("id");   // 取出 data-id 的值
+                        const data = {id:cartItemId};
+                        const url = "/cart/del";
+                        $.ajax({
+                            url: url,
+                            type: "DELETE",
+                            dataType: "json",
+                            data: JSON.stringify(data),
+                            contentType: "application/json",
+                            success: function(response) {
+                                if (response.code === 200) {
+                                    tr.remove();//刪除點選按鈕的那一行tr
+                                    let total = 0;
+                                    //對那個id> #cart-tbody 裡面的標籤
+                                    //選擇哪個(td)標籤,的第幾行的td標籤 > td:nth-child(6)
+                                    //each是迴圈,對每個tr>裡面的第6個td>都跑過一次
+                                    //replace("NT$", "") 將第一個參數 替換成第二個參數,也就是將他移除
+                                    //移除掉NT$字串後,轉成整數後就能跑NT$後面的整數,+到total裡面
+                                    $("#cart-tbody td:nth-child(6)").each(function() {
+                                        total += parseInt($(this).text().replace("NT$", ""));
+                                    });
+                                    //再重新整合 total後,在傳到畫面上,顯示總金額
+                                    $(".currency").text("總金額(不含運費)：NT$" + total);
+                                } else {
+                                    alert("錯誤：");
+                                }
+                            },
+                            error: function(xhr) {
+                                console.error(xhr);
+                                alert("刪除失敗！");
+                            }
+                        });
+                    })
+
+
                 } else {
                 }
             },
-            error: function(xhr) {
+            error: function (xhr) {
                 console.error(xhr);
                 alert("系統錯誤！");
             }

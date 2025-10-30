@@ -55,4 +55,19 @@ public class CartItemsServiceImpl implements CartItemsService {
         }
         return JsonResult.ok(list);
     }
+
+    //刪除購物車商品
+    @Override
+    public JsonResult deleteCart(CartItemsDTO cartItemsDTO,HttpSession session) {
+        UserVO sessionVo = (UserVO) session.getAttribute("sessionVO");
+        Integer id = sessionVo.getId();
+        if(id==null){
+            return new JsonResult(StatusCode.NOT_LOGIN,"尚未登入");
+        }
+        int rows = cartItemsMapper.deleteCart(id, cartItemsDTO.getId());
+        if (rows > 0){
+            return JsonResult.ok();
+        }
+        return new JsonResult(StatusCode.OPERATION_FAILED,"刪除失敗");
+    }
 }
