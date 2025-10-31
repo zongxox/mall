@@ -316,6 +316,12 @@
                 color: #556;
             }
         }
+
+        .num-control {
+            display: flex;
+            align-items: center;
+            gap: 6px
+        }
     </style>
 
 </head>
@@ -355,6 +361,8 @@
 
 <script>
     $(function () {
+
+        //顯示購物車資訊
         const url = "/cart/getCart";
         $.ajax({
             url: url,
@@ -364,32 +372,81 @@
                 const tbody = $("#cart-tbody")
                 if (response.code === 200) {
                     const items = response.data;//後端查詢到的數據
-                    let total =0 //初始化總金額
+                    let total = 0 //初始化總金額
                     items.forEach(item => {
                         const subTotal = item.productPrice * item.quantity;// 價格*數量
                         total += subTotal;//再給到初始化的總金額
                         //將查詢到的加入購物車資訊放到html元素裡,在放到畫面中
                         //${item.cartItemId}是每一行商品的購物車id,可以取道cartItemId
+                        //<td>${item.quantity}</td>
+                        //data-stock="${item.stock} 抓取到後端傳到前端的庫存
                         $("#cart-tbody").append(`
-                          <tr data-id="${item.cartItemId}">
+                          <tr data-id="${item.cartItemId}" data-stock="${item.stock}">
                             <td>${item.productId}</td>
                             <td>${item.productName}</td>
                             <td>${item.variantColor} / ${item.variantSize}</td>
-                            <td>${item.productPrice}</td>
-                            <td>${item.quantity}</td>
-                            <td>NT$${subTotal}</td>
+                            <td class="sub-price">${item.productPrice}</td>
+                            <td>
+                            <div class="num-control">
+                                <button type="button" class="btn-minus" id="minus">-</button>
+                                    <span id="qty-display" class="qty-display">${item.quantity}</span>
+                                <button type="button" class="btn-plus" id="plus">+</button>
+                            </div>
+                            </td>
+                            <td class="sub-total">NT$${subTotal}</td>
                             <td><button type="button" class="btn btn-del" style="width: 145px; height: 53px; --borRadius: 13;font-size: 16px;">刪除</button></td>
                           </tr>
                         `)
-                        console.log(item.cartItemId, item.productName);
+                        console.log(item);
+
                     })
-                    $(".currency").text("總金額(不含運費)：NT$"+total) //價格*庫存 = 顯示總金額
+
+                    //+跟-
+                    $(document).on("click", ".btn-plus,.btn-minus", function () {
+                        //先找到那一行的+跟+按鈕的最近的tr
+                        const row = $(this).closest("tr");
+                        //在往那一行的tr裡面去找.qty-display元素
+                        const qtyDisplay = row.find(".qty-display");
+                        let qty = parseInt(qtyDisplay.text()); //取出目前顯示的數量
+
+                        console.log("目前數量 qty =", qty, "原始文字 =", qtyDisplay.text());
+                        //在往那一行的tr裡面去找stock屬性值
+                        const stock = parseInt(row.data("stock"));
+                        console.log("庫存 stock =", stock, "原始屬性 =", row.data("stock"));
+
+                        //判斷點+
+                        if ($(this).hasClass("btn-plus")) {
+                            //判斷數量小於庫存
+                            if (qty < stock) {
+                                //判斷點 + 小於庫存就+1,
+                                qty++;
+                            } else {
+                                alert("超過庫存了！");
+                            }
+                            //判斷點-
+                        } else if ($(this).hasClass("btn-minus")) {
+                            //點 - 如果數量大於1就-1
+                            if (qty > 1) {//不讓數量小於 1
+                                qty--;
+                            };
+                        }
+                        qtyDisplay.text(qty); // 更新畫面數量
+
+                        //更新合計
+                        //找到單價的class
+                        //合計 = 單價 × 數量
+                        const subPriceText = row.find(".sub-price").text();
+                        const price = parseInt(subPriceText);
+                        const subTotal = price * qty;
+                        row.find(".sub-total").text("NT$" + subTotal);
+                    })
+
 
                     //刪除
-                    $(document).on("click",".btn-del",function () {
+                    $(document).on("click", ".btn-del", function () {
                         const tr = $(this).closest("tr");   // 找到這顆按鈕所在的列
                         const cartItemId = tr.data("id");   // 取出 data-id 的值
-                        const data = {id:cartItemId};
+                        const data = {id: cartItemId};
                         const url = "/cart/del";
                         $.ajax({
                             url: url,
@@ -397,7 +454,7 @@
                             dataType: "json",
                             data: JSON.stringify(data),
                             contentType: "application/json",
-                            success: function(response) {
+                            success: function (response) {
                                 if (response.code === 200) {
                                     tr.remove();//刪除點選按鈕的那一行tr
                                     let total = 0;
@@ -406,7 +463,7 @@
                                     //each是迴圈,對每個tr>裡面的第6個td>都跑過一次
                                     //replace("NT$", "") 將第一個參數 替換成第二個參數,也就是將他移除
                                     //移除掉NT$字串後,轉成整數後就能跑NT$後面的整數,+到total裡面
-                                    $("#cart-tbody td:nth-child(6)").each(function() {
+                                    $("#cart-tbody td:nth-child(6)").each(function () {
                                         total += parseInt($(this).text().replace("NT$", ""));
                                     });
                                     //再重新整合 total後,在傳到畫面上,顯示總金額
@@ -415,14 +472,15 @@
                                     alert("錯誤：");
                                 }
                             },
-                            error: function(xhr) {
+                            error: function (xhr) {
                                 console.error(xhr);
                                 alert("刪除失敗！");
                             }
                         });
                     })
 
-
+                    //價格*庫存 = 顯示總金額
+                    $(".currency").text("總金額(不含運費)：NT$" + total)
                 } else {
                 }
             },
