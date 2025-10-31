@@ -428,6 +428,7 @@
                             //點 - 如果數量大於1就-1
                             if (qty > 1) {//不讓數量小於 1
                                 qty--;
+                                return;
                             };
                         }
                         qtyDisplay.text(qty); // 更新畫面數量
@@ -439,6 +440,14 @@
                         const price = parseInt(subPriceText);
                         const subTotal = price * qty;
                         row.find(".sub-total").text("NT$" + subTotal);
+
+                        //更新總金額
+                        let total = 0;
+                        $("#cart-tbody .sub-total").each(function () {
+                            total += parseInt($(this).text().replace("NT$", ""));
+                        });
+                        //再重新整合 total後,在傳到畫面上,顯示總金額
+                        $(".currency").text("總金額(不含運費)：NT$" + total);
                     })
 
 
@@ -459,11 +468,10 @@
                                     tr.remove();//刪除點選按鈕的那一行tr
                                     let total = 0;
                                     //對那個id> #cart-tbody 裡面的標籤
-                                    //選擇哪個(td)標籤,的第幾行的td標籤 > td:nth-child(6)
                                     //each是迴圈,對每個tr>裡面的第6個td>都跑過一次
-                                    //replace("NT$", "") 將第一個參數 替換成第二個參數,也就是將他移除
-                                    //移除掉NT$字串後,轉成整數後就能跑NT$後面的整數,+到total裡面
-                                    $("#cart-tbody td:nth-child(6)").each(function () {
+                                    $("#cart-tbody .sub-total").each(function () {
+                                        //replace("NT$", "") 將第一個參數 替換成第二個參數,也就是將他移除
+                                        //移除掉NT$字串後,轉成整數後就能跑NT$後面的整數,+到total裡面
                                         total += parseInt($(this).text().replace("NT$", ""));
                                     });
                                     //再重新整合 total後,在傳到畫面上,顯示總金額
