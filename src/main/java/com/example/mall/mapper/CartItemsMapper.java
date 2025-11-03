@@ -14,10 +14,8 @@ public interface CartItemsMapper {
     //透過登入狀態的userid顯示購物車商品
     List<CartItemsVO> selectByUserId(Integer userId);
 
-    //查詢該使用者購物車中所有商品規格的詳細資料（例如圖片、顏色、尺寸、價格、數量）
-
     //刪除購物車商品
     int deleteCart(Integer userId,Integer cartItemId);
 
-    //更新購物車數量
+
 }

@@ -489,6 +489,10 @@
 
                     //價格*庫存 = 顯示總金額
                     $(".currency").text("總金額(不含運費)：NT$" + total)
+
+                    $("#checkout-btn").on("click",function () {
+                        window.location.href="payment_confirm.html";
+                    })
                 } else {
                 }
             },
