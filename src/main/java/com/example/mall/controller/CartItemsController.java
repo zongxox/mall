@@ -30,4 +30,10 @@ public class CartItemsController {
     public JsonResult deleteCart(@RequestBody CartItemsDTO cartItemsDTO,HttpSession session){
         return cartItemsServiceImpl.deleteCart(cartItemsDTO,session);
     }
+
+    //按結帳後,修改購物車表中數量
+    @PostMapping("/updateCart")
+    public JsonResult updateCart(@RequestBody CartItemsDTO cartItemsDTO,HttpSession session){
+        return cartItemsServiceImpl.updateCart(cartItemsDTO,session);
+    }
 }

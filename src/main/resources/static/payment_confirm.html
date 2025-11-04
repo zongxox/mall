@@ -858,6 +858,43 @@
             }
         });
 
+        const url = "/cart/getCart";
+        $.ajax({
+            url: url,
+            type: "GET",
+            dataType: "json",
+            success: function(response) {
+                if (response.code === 200) {
+                    const items = response.data;//後端查詢到的數據
+                    let total = 0 //初始化總金額
+                    items.forEach(item => {
+                        const subTotal = item.productPrice * item.quantity;// 價格*數量
+                        total += subTotal;//再給到初始化的總金額
+                        //將查詢到的加入購物車資訊放到html元素裡,在放到畫面中
+                        //${item.cartItemId}是每一行商品的購物車id,可以取道cartItemId
+                        //<td>${item.quantity}</td>
+                        //data-stock="${item.stock} 抓取到後端傳到前端的庫存
+                        $("#confirm-cart-items").append(`
+                          <tr data-id="${item.cartItemId}" data-stock="${item.stock}">
+                            <td>${item.productName}</td>
+                            <td>${item.variantColor} / ${item.variantSize}</td>
+                            <td class="sub-price">${item.productPrice}</td>
+                            <td><span id="qty-display" class="qty-display">${item.quantity}</span></td>
+                            <td class="sub-total">NT$${subTotal}</td>
+                          </tr>
+                        `)
+                        console.log(item);
+
+                    })
+                } else {
+                    alert("錯誤：" + response.msg);
+                }
+            },
+            error: function(xhr) {
+                console.error(xhr);
+                alert("系統錯誤！");
+            }
+        });
 
 
 

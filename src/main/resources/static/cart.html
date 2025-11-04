@@ -388,9 +388,9 @@
                             <td class="sub-price">${item.productPrice}</td>
                             <td>
                             <div class="num-control">
-                                <button type="button" class="btn-minus" id="minus">-</button>
-                                    <span id="qty-display" class="qty-display">${item.quantity}</span>
-                                <button type="button" class="btn-plus" id="plus">+</button>
+                                <button type="button" class="btn-minus">-</button>
+                                    <span class="qty-display">${item.quantity}</span>
+                                <button type="button" class="btn-plus">+</button>
                             </div>
                             </td>
                             <td class="sub-total">NT$${subTotal}</td>
@@ -422,12 +422,15 @@
                                 qty++;
                             } else {
                                 alert("超過庫存了！");
+                                return;
                             }
                             //判斷點-
                         } else if ($(this).hasClass("btn-minus")) {
                             //點 - 如果數量大於1就-1
                             if (qty > 1) {//不讓數量小於 1
                                 qty--;
+                            }else {
+                                //沒變就直接結束
                                 return;
                             };
                         }
@@ -490,10 +493,44 @@
                     //價格*庫存 = 顯示總金額
                     $(".currency").text("總金額(不含運費)：NT$" + total)
 
-                    $("#checkout-btn").on("click",function () {
-                        window.location.href="payment_confirm.html";
-                    })
+
+                    //按結帳後將商品id跟數量給後端更新購物車表
+                    $("#checkout-btn").off("click").on("click", function () {
+                        const btn = $(this).prop("disabled", true).text("同步中…");
+                        const reqs = [];
+                        const url ="/cart/updateCart";
+                        $("#cart-tbody tr").each(function () {
+                            const id  = $(this).data("id");//tr表中每一個td的商品id
+                            const qty = parseInt($(this).find(".qty-display").text());//每一個td的商品數量
+
+                            //將循環的出來的結果先存到reqs,在一次送出到後端
+                            reqs.push($.ajax({
+                                url: url,
+                                type: "POST",
+                                dataType: "json",
+                                contentType: "application/json",
+                                data: JSON.stringify({ id, quantity: qty })
+                            }));
+                        });
+
+                        //送出前先判斷裡面有沒有值,如果是空的怎麼處理
+                        if (reqs.length === 0) {
+                            btn.prop("disabled", false).text("結帳");
+                            alert("購物車是空的");
+                            return;
+                        }
+
+                        //等待所有請求完成才跳轉
+                        $.when.apply($, reqs).done(function () {
+                            window.location.href = "payment_confirm.html";
+                        }).fail(function (xhr) {
+                            console.error("有項目更新失敗：", xhr);
+                            alert("同步失敗，請稍後重試");
+                            btn.prop("disabled", false).text("結帳");
+                        });
+                    });
                 } else {
+                    alert("目前沒有商品資料");
                 }
             },
             error: function (xhr) {

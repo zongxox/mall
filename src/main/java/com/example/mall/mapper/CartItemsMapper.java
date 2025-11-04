@@ -15,7 +15,9 @@ public interface CartItemsMapper {
     List<CartItemsVO> selectByUserId(Integer userId);
 
     //刪除購物車商品
-    int deleteCart(Integer userId,Integer cartItemId);
+    int deleteCart(Integer userId,Integer id);
 
+    //按結帳後,修改購物車表中數量
+    int updateCart(Integer userId,Integer id,Integer quantity);
 
 }

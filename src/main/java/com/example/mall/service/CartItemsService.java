@@ -8,4 +8,5 @@ public interface CartItemsService {
     JsonResult insertCart(CartItemsDTO cartItemsDTO, HttpSession session);//加入購物車表中
     JsonResult selectByUserId(HttpSession session);//透過登入狀態的userid顯示購物車商品
     JsonResult deleteCart(CartItemsDTO cartItemsDTO,HttpSession session);//刪除購物車商品
+    JsonResult updateCart(CartItemsDTO cartItemsDTO,HttpSession session);//按結帳後,修改購物車表中數量
 }

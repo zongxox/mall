@@ -536,6 +536,16 @@
                             quantity:qty
                         };
 
+                        //按直接購買時,判斷有沒有選取顏色以及尺寸
+                        if (selectedSize.length === 0 ) {
+                            $("#msg-box").text("請先選取顏色與尺寸！").show();
+                            return;
+                        }
+                        if (qty <= 0) {
+                            $("#msg-box").text("請先選擇數量！").show();
+                            return;
+                        }
+
                         const url = "/cart/addCart";
                         $.ajax({
                             url: url,
