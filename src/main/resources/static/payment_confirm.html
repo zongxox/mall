@@ -401,7 +401,7 @@
         <div class="total-price-table">
             <table class="price-summary">
                 <tr>
-                    <td>商品金額：</td>
+                    <td>商品總金額：</td>
                     <td class="price" id="product-price">NT$0</td>
                 </tr>
                 <tr>
@@ -858,6 +858,7 @@
             }
         });
 
+        //商品詳情
         const url = "/cart/getCart";
         $.ajax({
             url: url,
@@ -868,7 +869,7 @@
                     const items = response.data;//後端查詢到的數據
                     let total = 0 //初始化總金額
                     items.forEach(item => {
-                        const subTotal = item.productPrice * item.quantity;// 價格*數量
+                        const subTotal = item.productPrice * item.quantity;// 價格*數量=合計
                         total += subTotal;//再給到初始化的總金額
                         //將查詢到的加入購物車資訊放到html元素裡,在放到畫面中
                         //${item.cartItemId}是每一行商品的購物車id,可以取道cartItemId
@@ -879,13 +880,17 @@
                             <td>${item.productName}</td>
                             <td>${item.variantColor} / ${item.variantSize}</td>
                             <td class="sub-price">${item.productPrice}</td>
-                            <td><span id="qty-display" class="qty-display">${item.quantity}</span></td>
+                            <td><span " class="qty-display">${item.quantity}</span></td>
                             <td class="sub-total">NT$${subTotal}</td>
                           </tr>
                         `)
                         console.log(item);
-
                     })
+                    //再重新整合 total後,在傳到畫面上,顯示總金額
+                    $("#product-price").text("NT$" + total);
+                    //將總金額+上運費顯示在畫面上
+                    total += 60
+                    $("#total-price").text("NT$"+total);
                 } else {
                     alert("錯誤：" + response.msg);
                 }
@@ -896,7 +901,7 @@
             }
         });
 
-
+        //點擊前往付款,將配送資訊以及商品資訊規格及金額,生成訂單,刪除庫存
 
 
 
