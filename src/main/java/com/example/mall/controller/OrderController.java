@@ -6,10 +6,7 @@ import com.example.mall.response.JsonResult;
 import com.example.mall.service.Impl.OrderServiceImpl;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/order")
@@ -23,4 +20,9 @@ public class OrderController {
         return orderServiceImpl.insertOrder(orderDTO,session);
     }
 
+    //用戶付款（更新訂單狀態＋扣庫存）
+    @PostMapping("/pay")
+    public JsonResult payOrder(@RequestBody Integer orderId, HttpSession session) {
+        return orderServiceImpl.payOrder(orderId, session);
+    }
 }

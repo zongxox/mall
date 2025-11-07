@@ -385,7 +385,7 @@
 
         <div class="side-group">
             <div class="side-title">交易</div>
-            <a href="#" class="side-link js-nav" data-target="orders">我的訂單</a>
+            <a href="order.html" class="side-link js-nav" data-target="orders">我的訂單</a>
             <a href="cart.html" class="side-link">購物車</a>
             <a href="index.html" class="side-link">回首頁</a>
             <a href="login.html" class="side-link" id="logout">登出</a>
@@ -444,64 +444,6 @@
             </form>
         </section>
 
-
-        <!-- Orders List -->
-        <section class="card panel view" id="view-orders" hidden>
-            <div class="table-wrap">
-                <table id="ordersTable">
-                    <thead>
-                    <tr>
-                        <th>訂單編號</th>
-                        <th>成立日期</th>
-                        <th>配送地址</th>
-                        <th>收件人電話</th>
-                        <th>總金額</th>
-                        <th>狀態</th>
-                        <th style="width:120px">操作</th>
-                    </tr>
-                    </thead>
-                    <tbody id="ordersTbody">
-                    <tr>
-                        <td colspan="7" class="muted">載入中…</td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-        </section>
-
-        <!-- Order Detail -->
-        <section class="card panel view" id="view-orderDetail" hidden>
-            <div class="table-wrap">
-                <table>
-                    <thead>
-                    <tr>
-                        <th>商品編號</th>
-                        <th>商品資訊</th>
-                        <th>尺寸/顏色</th>
-                        <th>售價</th>
-                        <th>數量</th>
-                        <th>小計</th>
-                    </tr>
-                    </thead>
-                    <tbody id="itemsTbody">
-                    <tr>
-                        <td colspan="6" class="muted">載入中…</td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <div class="summary">
-                <div class="card panel summary-card" style="padding:0">
-                    <div class="summary-row"><span>商品總金額</span><span class="price" id="sum-product">NT$0</span></div>
-                    <div class="summary-row"><span>運費</span><span class="price" id="sum-ship">NT$60</span></div>
-                    <div class="summary-row total"><span>總金額</span><span class="price" id="sum-total">NT$60</span></div>
-                    <div style="display:flex; gap:10px; padding:12px">
-                        <button class="btn" id="backToOrders">返回</button>
-                    </div>
-                </div>
-            </div>
-        </section>
 
     </main>
 </div>
@@ -570,7 +512,7 @@
             });
         });
 
-        // 「取消」按鈕切回個資畫面
+        //取消按鈕切回個資畫面
         $(function () {
             $("#cancelEditBtn").on("click", function () {
                 $(".view").attr("hidden", true);//將所有的view加上隱藏屬性

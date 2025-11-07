@@ -44,8 +44,14 @@
         DELETE FROM cart_items WHERE user_id = #{userId} AND id = #{id}
     </delete>
 
-<!--按結帳後,修改購物車表中數量-->
+<!--按購物車結帳後,修改購物車表中數量,跳轉到配送資訊顯示 -->
     <update id="updateCart">
         UPDATE cart_items SET quantity=#{quantity} WHERE user_id = #{userId} AND id = #{id}
     </update>
+
+    <!--基於用戶id刪除整個購物車-->
+    <delete id="deleteCartByUserId">
+        DELETE FROM cart_items WHERE user_id = #{userId}
+    </delete>
+
 </mapper>

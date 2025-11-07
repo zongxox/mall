@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Cache-Control" content="no-store" />
+  <title>管理訂單</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <style>
+    :root{
+      --bg:#0f1220; --panel:#161a2f; --text:#e9eef7; --muted:#b6bdd1;
+      --brand:#7c5cff; --brand2:#6ae3ff; --success:#34d399; --danger:#ff6b6b;
+      --ring:0 0 0 .16rem rgba(106,227,255,.45); --radius:16px; --shadow:0 10px 30px rgba(0,0,0,.25);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:'Noto Sans TC',system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;
+      background:
+              radial-gradient(800px 350px at 85% 0%, rgba(106,227,255,.16), transparent 60%),
+              radial-gradient(800px 350px at 0% 10%, rgba(124,92,255,.18), transparent 60%),
+              var(--bg);
+      color:var(--text);
+      min-height:100vh; padding:24px;
+    }
+
+    /* 外框容器 */
+    .shell{
+      width:min(1200px, 96vw);
+      margin:0 auto;
+      display:grid;
+      gap:18px;
+    }
+
+    /* 玻璃質感面板 */
+    .panel{
+      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:22px;
+      backdrop-filter: blur(6px);
+    }
+
+    /* 標題列 */
+    .panel-header{display:flex; align-items:center; justify-content:space-between; gap:12px; padding-bottom:12px; margin-bottom:16px; border-bottom:1px solid rgba(255,255,255,.12);}
+    .panel-title{margin:0; font-weight:800; font-size:22px;}
+    .muted{color:var(--muted); font-size:14px}
+
+    /* 表單/欄位 */
+    .controls{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
+    .input, .select{
+      appearance:none; outline:0; border:1px solid rgba(255,255,255,.16);
+      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      color:var(--text); border-radius:12px; padding:10px 14px; min-height:42px;
+      transition: box-shadow .2s ease, border-color .2s ease, background .2s ease;
+    }
+    .input::placeholder{color:rgba(233,238,247,.55)}
+    .input:focus, .select:focus{ box-shadow: var(--ring); }
+
+    /* 按鈕：漸層膠囊 */
+    .btn{
+      appearance:none; border:0; outline:0; cursor:pointer;
+      padding:10px 18px; border-radius:999px; font-weight:800; font-size:14px;
+      color:#0b0f1f; background:linear-gradient(90deg, var(--brand) 0%, var(--brand2) 100%);
+      transition:transform .05s ease, opacity .2s ease, box-shadow .2s ease;
+    }
+    .btn:hover{opacity:.95}
+    .btn:active{transform:translateY(1px)}
+    .btn:focus-visible{box-shadow:var(--ring)}
+
+    /* 表格：暗色 + 玻璃 */
+    .table{width:100%; border-collapse:separate; border-spacing:0;}
+    .table thead th{
+      text-align:left; font-size:13px; letter-spacing:.02em; text-transform:uppercase;
+      color:var(--muted); font-weight:800; padding:12px 14px;
+      border-bottom:1px solid rgba(255,255,255,.12);
+      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+    }
+    .table tbody td{ padding:12px 14px; border-bottom:1px solid rgba(255,255,255,.08); }
+    .table tbody tr:hover{ background:rgba(255,255,255,.03); }
+
+    /* 商品縮圖 */
+    .product-picture{ width:84px; height:84px; border-radius:12px; overflow:hidden; flex-shrink:0; border:1px solid rgba(255,255,255,.12); }
+    .product-picture img{ width:100%; height:100%; object-fit:cover; display:block; }
+
+    /* 總金額區塊 */
+    .summary{ display:flex; justify-content:flex-end; }
+    .summary-card{ margin-top:12px; min-width:320px; }
+    .summary-row{ display:flex; justify-content:space-between; padding:8px 0; }
+    .summary-row.total{ border-top:1px solid rgba(255,255,255,.12); margin-top:6px; padding-top:12px; font-weight:800; }
+    .price{ color:#ffd166; font-weight:800; }
+
+    /* 輕量的提示 */
+    .hint{ font-size:13px; color:var(--muted); margin-left:8px; }
+
+    /* 亮色模式對應 */
+    @media (prefers-color-scheme: light){
+      body{ background:#f6f7fb; color:#121622; }
+      .panel{ background:#fff; border:1px solid #e8ecf4; color:#121622; }
+      .panel-header{ border-bottom:1px solid #e8ecf4; }
+      .input,.select{ background:#fff; border:1px solid #e8ecf4; color:#121622; }
+      .table thead th{ background:#fff; border-bottom:1px solid #e8ecf4; }
+      .table tbody td{ border-bottom:1px solid #eef1f6; }
+      .product-picture{ border-color:#e8ecf4; }
+    }
+  </style>
+</head>
+<body>
+<div class="shell">
+  <!-- 側邊欄（如需） -->
+  <div id="header-container"></div>
+
+  <!-- 訂單管理列表 -->
+  <section id="order-management" class="panel">
+    <header class="panel-header">
+      <h2 class="panel-title">訂單管理</h2>
+      <span id="order-list-status" class="muted"></span>
+    </header>
+
+    <div class="controls" style="margin-bottom:12px;">
+      <input id="orderSearchInput" class="input" type="text" placeholder="請輸入訂單編號" />
+      <button id="orderSearchBtn" class="btn">查詢</button>
+      <span class="hint">可直接輸入完整訂單編號查詢</span>
+    </div>
+
+    <div class="table-wrap">
+      <table class="table orders-table">
+        <thead>
+        <tr>
+          <th>訂單編號</th>
+          <th>用戶編號</th>
+          <th>成立日期</th>
+          <th>配送地址</th>
+          <th>收件電話</th>
+          <th>總金額</th>
+          <th>狀態</th>
+          <th>操作</th>
+        </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 訂單詳情 -->
+  <section id="order-items" class="panel" style="display:none;">
+    <header class="panel-header">
+      <h2 class="panel-title">訂單詳情 <span id="current-order-id" class="muted"></span></h2>
+      <span id="order-items-status" class="muted" style="display:none;">載入中…</span>
+    </header>
+
+    <div class="table-wrap">
+      <table id="order-items-table" class="table">
+        <thead>
+        <tr>
+          <th>商品編號</th>
+          <th>商品資訊</th>
+          <th>尺寸/顏色</th>
+          <th>售價</th>
+          <th>數量</th>
+          <th>合計</th>
+        </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <div class="summary">
+      <div class="panel summary-card">
+        <div class="summary-row"><span>商品總金額</span><span id="product-price" class="price">NT$0</span></div>
+        <div class="summary-row"><span>運費</span><span id="deliver-fee" class="price">NT$60</span></div>
+        <div class="summary-row total"><span>總金額</span><span id="total-price" class="price">NT$0</span></div>
+        <div style="text-align:right; margin-top:10px;">
+          <button type="button" class="btn" onclick="backToList()">返回</button>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+
+</script>
+</body>
+</html>

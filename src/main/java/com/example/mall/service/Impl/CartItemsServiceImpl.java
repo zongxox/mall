@@ -71,7 +71,7 @@ public class CartItemsServiceImpl implements CartItemsService {
         return new JsonResult(StatusCode.OPERATION_FAILED,"刪除失敗");
     }
 
-    //按結帳後,修改購物車表中數量
+    //按購物車結帳後,修改購物車表中數量,跳轉到配送資訊顯示
     @Override
     public JsonResult updateCart(CartItemsDTO cartItemsDTO, HttpSession session) {
         UserVO sessionVO = (UserVO) session.getAttribute("sessionVO");

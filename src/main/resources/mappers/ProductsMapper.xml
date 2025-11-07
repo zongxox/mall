@@ -35,8 +35,10 @@
 
     <!--查詢庫存顏色尺寸-->
     <select id="selectProductsVariant" resultType="com.example.mall.entity.ProductVariant">
-        SELECT id,product_id, color, size, stock, created_time
+        SELECT id, product_id, color, size, stock, created_time
         FROM product_variants
         WHERE product_id = #{productId}
     </select>
+
+
 </mapper>

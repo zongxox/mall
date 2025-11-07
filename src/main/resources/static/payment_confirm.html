@@ -335,14 +335,56 @@
             color: #6b7280;
         }
 
-        /* Focus 時維持黑字白底並有聚焦外光暈 */
+        /* 深色主題：下拉選單不要白色 */
+        .deliver-management select#city,
+        .deliver-management select#district {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background: #1b213a !important;
+            color: var(--text) !important;
+            border: 1px solid rgba(255,255,255,.16) !important;
+        }
+
+        /* 展開的選項面板（部分瀏覽器才支援） */
+        .deliver-management select#city option,
+        .deliver-management select#district option {
+            background: #1b213a;
+            color: var(--text);
+        }
+
+        /* 聚焦外光暈一致 */
         .deliver-management select#city:focus,
         .deliver-management select#district:focus {
-            color: #111;
-            background: #fff;
             box-shadow: var(--ring);
             outline: none;
         }
+
+        /* 客製化下拉箭頭（避免原生箭頭是白底風格） */
+        .deliver-management select#city,
+        .deliver-management select#district {
+            background-image: url("data:image/svg+xml;utf8,<svg fill='white' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'><path d='M5.3 7.3a1 1 0 011.4 0L10 10.6l3.3-3.3a1 1 0 111.4 1.4l-4 4a1 1 0 01-1.4 0l-4-4a1 1 0 010-1.4z'/></svg>");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 14px 14px;
+            padding-right: 36px; /* 讓文字不壓到箭頭 */
+        }
+
+        /* 亮色系仍想保持白底，就讓 light 媒體查詢蓋掉 */
+        @media (prefers-color-scheme: light) {
+            .deliver-management select#city,
+            .deliver-management select#district {
+                background: #fff !important;
+                color: #121622 !important;
+                border: 1px solid #e8ecf4 !important;
+            }
+            .deliver-management select#city option,
+            .deliver-management select#district option {
+                background: #fff;
+                color: #121622;
+            }
+        }
+
 
     </style>
 
@@ -831,7 +873,7 @@
                     //將使用者選到的縣市,裡面的值addressData["臺北市"][>值"信義區"],存到districts
                     const districts = addressData[selectCity];
                     //再將districts存到的縣市,裡面去找區該縣市的請選擇鄉鎮市區,及郵遞區號
-                    //再將縣市＋鄉鎮循環出來
+                    //再將縣市,鄉鎮循環出來
                     for (const district in districts) {
                         districtSelect.append(`<option value="${district}">${district}</option>`);
                     }
@@ -852,6 +894,11 @@
                 const zipcode = addressData[selectedCity][selectedDistrict];
                 //再將結果取到的縣市＋鄉鎮的對應資料(郵遞區號)裡面的,郵遞區號顯示出來
                 zipcodeInput.val(zipcode);
+
+                // 自動把縣市,鄉鎮,郵遞區號顯示在詳細地址欄位前面
+                const city = citySelect.val();
+                const addressLine = $("#address").val().trim();
+                $("#address").val(`${zipcode} ${city}${selectedDistrict} ${addressLine}`);
             } else {
                 //若沒有選完整或查不到，清空郵遞區號欄位
                 zipcodeInput.val("");
@@ -880,7 +927,7 @@
                             <td>${item.productName}</td>
                             <td>${item.variantColor} / ${item.variantSize}</td>
                             <td class="sub-price">${item.productPrice}</td>
-                            <td><span " class="qty-display">${item.quantity}</span></td>
+                                <td><span class="qty-display">${item.quantity}</span></td>
                             <td class="sub-total">NT$${subTotal}</td>
                           </tr>
                         `)
@@ -892,7 +939,8 @@
                     total += 60
                     $("#total-price").text("NT$"+total);
                 } else {
-                    alert("錯誤：" + response.msg);
+                    alert(response.msg);
+                    window.location.href="login.html"
                 }
             },
             error: function(xhr) {
@@ -901,8 +949,40 @@
             }
         });
 
-        //點擊前往付款,將配送資訊以及商品資訊規格及金額,生成訂單,刪除庫存
+        //點擊前往付款,將配送資訊以及商品資訊規格及金額,生成訂單,刪除購物車
+        $("#submit-order").on("click",function () {
+            const totalAmount = parseInt($("#total-price").text().replace("NT$", ""));//含運費的總金額
+            const data = {
+                recipientName: $("#recipient").val().trim(),//收件人
+                recipientPhone: $("#phone").val().trim(),//電話
+                recipientAddress: $("#address").val().trim(),//詳細地址
+                totalAmount: totalAmount//含運費的總金額
+            };
 
+            if (!data.recipientName || !data.recipientPhone || !data.recipientAddress) {
+                alert("請完整填寫配送資訊");
+                return;
+            }
+            const url = "/order/order";
+            $.ajax({
+                url: url,
+                type: "POST",
+                dataType: "json",
+                contentType: "application/json",
+                data: JSON.stringify(data),
+                success: function(response) {
+                    if (response.code === 200) {
+                        window.location.href = `credit-card-payment.html?orderId=${response.data}`;
+                    } else {
+                        alert("訂單建立失敗" + response.msg);
+                    }
+                },
+                error: function(xhr) {
+                    console.error(xhr);
+                    alert("系統錯誤！");
+                }
+            });
+        });
 
 
 

@@ -31,7 +31,7 @@ public class CartItemsController {
         return cartItemsServiceImpl.deleteCart(cartItemsDTO,session);
     }
 
-    //按結帳後,修改購物車表中數量
+    //按購物車結帳後,修改購物車表中數量,跳轉到配送資訊顯示
     @PostMapping("/updateCart")
     public JsonResult updateCart(@RequestBody CartItemsDTO cartItemsDTO,HttpSession session){
         return cartItemsServiceImpl.updateCart(cartItemsDTO,session);

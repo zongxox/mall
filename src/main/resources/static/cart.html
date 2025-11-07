@@ -480,7 +480,7 @@
                                     //再重新整合 total後,在傳到畫面上,顯示總金額
                                     $(".currency").text("總金額(不含運費)：NT$" + total);
                                 } else {
-                                    alert("錯誤：");
+                                    alert("尚未登入");
                                 }
                             },
                             error: function (xhr) {
@@ -488,13 +488,13 @@
                                 alert("刪除失敗！");
                             }
                         });
-                    })
+                    });
 
                     //價格*庫存 = 顯示總金額
                     $(".currency").text("總金額(不含運費)：NT$" + total)
 
 
-                    //按結帳後將商品id跟數量給後端更新購物車表
+                    //按購物車結帳後,修改購物車表中數量,跳轉到配送資訊顯示 將商品id跟數量給後端更新購物車表
                     $("#checkout-btn").off("click").on("click", function () {
                         const btn = $(this).prop("disabled", true).text("同步中…");
                         const reqs = [];

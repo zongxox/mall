@@ -4,9 +4,33 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.mall.mapper.OrderMapper">
     <!--新增用戶配送資訊-->
-    <insert id="insertOrder">
+    <insert id="insertOrder" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
         INSERT INTO orders (user_id, total_amount, status, recipient_name, recipient_phone, recipient_address,
                             created_time, updated_time)
-        VALUES (#{userId},#{totalAmount},#{status},#{recipientName},#{recipientPhone},#{recipientAddress},now(),now());
+        VALUES (#{userId}, #{totalAmount}, #{status}, #{recipientName}, #{recipientPhone}, #{recipientAddress}, now(),
+                now());
     </insert>
+
+    <!--查詢訂單id-->
+    <select id="selectOrderId" resultType="com.example.mall.entity.Order">
+        SELECT id,
+               user_id,
+               total_amount,
+               status,
+               recipient_name,
+               recipient_phone,
+               recipient_address,
+               created_time,
+               updated_time
+        FROM orders
+        WHERE id = #{id};
+    </select>
+
+    <!--更新訂單狀態-->
+    <update id="updateOrderStatus">
+        UPDATE orders
+        SET status = #{status},
+            updated_time = now()
+        WHERE id = #{id}
+    </update>
 </mapper>

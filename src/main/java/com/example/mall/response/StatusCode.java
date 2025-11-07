@@ -27,7 +27,13 @@ public enum StatusCode {
     EMAIL_EMPTY(1014, "Email 不可為空"),
     PASSWORD_EMPTY(1015, "密碼不可為空"),
     PASSWORD_UPDATE_FAILED(1016, "密碼更新失敗"),
-    PRODUCTS_FAIL(1017,"目前沒有商品資料");
+    PRODUCTS_FAIL(1017,"目前沒有商品資料"),
+    ORDER_NOT_FOUND(1018,"訂單不存在"),
+    ORDER_NOT_USER(1019,"此訂單不屬於你"),
+    ORDER_ALREADY_PAID(1020,"訂單已付款或狀態錯誤"),
+    ORDER_ITEM_EMPTY(1021, "訂單明細為空"),
+    STOCK_NOT_ENOUGH(1022,"庫存不足或不存在"),
+    ORDER_STATUS_CONFLICT(1023,"更新狀態失敗");
     private Integer code; //回應狀態碼
     private String msg; //回應狀態信息結果
 
