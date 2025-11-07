@@ -1,7 +1,7 @@
 package com.example.mall.controller;
 
 
-import com.example.mall.dto.OrderDTO;
+import com.example.mall.pojo.dto.OrderDTO;
 import com.example.mall.response.JsonResult;
 import com.example.mall.service.Impl.OrderServiceImpl;
 import jakarta.servlet.http.HttpSession;
@@ -24,5 +24,11 @@ public class OrderController {
     @PostMapping("/pay")
     public JsonResult payOrder(@RequestBody Integer orderId, HttpSession session) {
         return orderServiceImpl.payOrder(orderId, session);
+    }
+
+    //會員中心用戶的全部訂單
+    @GetMapping("/allOrders")
+    public JsonResult allOrders() {
+        return JsonResult.ok(orderServiceImpl.getAllOrders());
     }
 }

@@ -1,7 +1,7 @@
 package com.example.mall.mapper;
 
-import com.example.mall.entity.Order;
-import com.example.mall.entity.OrderItem;
+import com.example.mall.pojo.entity.Order;
+import com.example.mall.pojo.entity.OrderItem;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;

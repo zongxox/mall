@@ -12,19 +12,19 @@
                 #{createdTime}, #{updatedTime})
     </insert>
     <!--註冊時查詢帳號是否存在-->
-    <select id="getUserByAccount" resultType="com.example.mall.entity.User">
+    <select id="getUserByAccount" resultType="com.example.mall.pojo.entity.User">
         SELECT account
         FROM user
         WHERE account = #{account}
     </select>
     <!--註冊時查詢email是否存在-->
-    <select id="getUserByEmail" resultType="com.example.mall.entity.User">
+    <select id="getUserByEmail" resultType="com.example.mall.pojo.entity.User">
         SELECT email
         FROM user
         WHERE email = #{email}
     </select>
     <!--註冊時email驗證,token是否存在及過期 及 email是否驗證過-->
-    <select id="getTokenTime" resultType="com.example.mall.entity.User">
+    <select id="getTokenTime" resultType="com.example.mall.pojo.entity.User">
         SELECT email_verify_token,
                email_verify_token_expire,
                email_verified
@@ -43,7 +43,7 @@
     </update>
 
     <!--登入查詢帳號密碼是否正確-->
-    <select id="selectAccountPassword" resultType="com.example.mall.entity.User">
+    <select id="selectAccountPassword" resultType="com.example.mall.pojo.entity.User">
         SELECT id,
                account,
                password,
@@ -71,7 +71,7 @@
     </update>
 
     <!-- 基於用戶id查詢用戶資料-->
-    <select id="userById" resultType="com.example.mall.entity.User">
+    <select id="userById" resultType="com.example.mall.pojo.entity.User">
         SELECT id,
                account,
                password,
@@ -94,7 +94,7 @@
     </update>
 
     <!--查詢前端傳送過來忘記密碼的token-->
-    <select id="getResetTokenTime" resultType="com.example.mall.entity.User">
+    <select id="getResetTokenTime" resultType="com.example.mall.pojo.entity.User">
         SELECT reset_token,reset_token_expire
         FROM user
         WHERE reset_token = #{resetToken}

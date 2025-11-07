@@ -1,12 +1,13 @@
 package com.example.mall.service.Impl;
 
-import com.example.mall.entity.ProductVariant;
-import com.example.mall.entity.Products;
+import com.example.mall.aop.RequiredLog;
+import com.example.mall.pojo.entity.ProductVariant;
+import com.example.mall.pojo.entity.Products;
 import com.example.mall.mapper.ProductsMapper;
 import com.example.mall.response.JsonResult;
 import com.example.mall.response.StatusCode;
 import com.example.mall.service.ProductsService;
-import com.example.mall.vo.ProductsVO;
+import com.example.mall.pojo.vo.ProductsVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ public class ProductsServiceImpl implements ProductsService {
     private ProductsMapper productsMapper;
 
     //動態查詢全部商品
+    @RequiredLog("動態查詢全部商品")
     @Override
     public JsonResult selectProductsAll(Products products) {
         List<Products> list = productsMapper.selectProductsAll(products);
@@ -29,6 +31,7 @@ public class ProductsServiceImpl implements ProductsService {
     }
 
     //基於productId查詢商品資訊
+    @RequiredLog("基於productId查詢商品資訊")
     @Override
     public JsonResult selectProducts(Integer productId) {
         //查詢到的商品資訊

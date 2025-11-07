@@ -12,7 +12,7 @@
     </insert>
 
     <!--查詢訂單id-->
-    <select id="selectOrderId" resultType="com.example.mall.entity.Order">
+    <select id="selectOrderId" resultType="com.example.mall.pojo.entity.Order">
         SELECT id,
                user_id,
                total_amount,
@@ -33,4 +33,17 @@
             updated_time = now()
         WHERE id = #{id}
     </update>
+<!--會員中心用戶的全部訂單-->
+    <select id="selectAllOrders" resultType="map">
+        SELECT
+            o.id,
+            o.user_id,
+            DATE_FORMAT(o.created_time, '%Y-%m-%d %H:%i:%s') AS created_time,
+            o.recipient_address,
+            o.recipient_phone,
+            o.total_amount,
+            o.status
+        FROM orders o
+        ORDER BY o.created_time DESC
+    </select>
 </mapper>

@@ -1,8 +1,7 @@
 package com.example.mall.mapper;
 
-import com.example.mall.entity.CartItems;
-import com.example.mall.entity.OrderItem;
-import com.example.mall.vo.CartItemsVO;
+import com.example.mall.pojo.entity.CartItems;
+import com.example.mall.pojo.vo.CartItemsVO;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;

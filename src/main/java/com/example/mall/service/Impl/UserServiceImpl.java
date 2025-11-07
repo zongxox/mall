@@ -1,12 +1,13 @@
 package com.example.mall.service.Impl;
 
-import com.example.mall.dto.UserDTO;
-import com.example.mall.entity.User;
+import com.example.mall.aop.RequiredLog;
+import com.example.mall.pojo.dto.UserDTO;
+import com.example.mall.pojo.entity.User;
 import com.example.mall.mapper.UserMapper;
 import com.example.mall.response.JsonResult;
 import com.example.mall.response.StatusCode;
 import com.example.mall.service.UserService;
-import com.example.mall.vo.UserVO;
+import com.example.mall.pojo.vo.UserVO;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,7 @@ public class UserServiceImpl implements UserService {
     private JavaMailSender javaMailSender;
 
     //註冊
+    @RequiredLog("用戶註冊")
     @Override
     public JsonResult saveUser(UserDTO userDTO) {
         String email = userDTO.getEmail();//前端傳送過來的email
@@ -80,6 +82,7 @@ public class UserServiceImpl implements UserService {
     }
 
     //驗證token及信箱
+    @RequiredLog("驗證token及信箱")
     @Override
     public JsonResult verifyEmail(UserDTO userDTO) {
         String email_verify_token = userDTO.getEmailVerifyToken();//獲取接收到的token
@@ -112,6 +115,7 @@ public class UserServiceImpl implements UserService {
     }
 
     //登入查詢帳號密碼是否正確
+    @RequiredLog("登入查詢帳號密碼是否正確")
     @Override
     public JsonResult selectAccountPassword(UserDTO userDto, HttpSession session) {
         User user = userMapper.selectAccountPassword(userDto);//將前端傳遞過來的帳號密碼跟數據庫做比對
@@ -125,6 +129,7 @@ public class UserServiceImpl implements UserService {
     }
 
     //利用登入存的session去顯示會員資料
+    @RequiredLog("利用登入存的session去顯示會員資料")
     @Override
     public JsonResult userByInformation(HttpSession session) {
         UserVO vo = (UserVO) session.getAttribute("sessionVO");
@@ -132,6 +137,7 @@ public class UserServiceImpl implements UserService {
     }
 
     //修改會員資料
+    @RequiredLog("修改會員資料")
     @Override
     public JsonResult updateUser(UserDTO userDto, HttpSession session) {
         //先重登入後的session取得會員id
@@ -158,6 +164,7 @@ public class UserServiceImpl implements UserService {
     }
 
     //忘記密碼
+    @RequiredLog("忘記密碼")
     @Override
     public JsonResult resetPwd(UserDTO userDTO) {
         String email = userDTO.getEmail();
@@ -200,6 +207,7 @@ public class UserServiceImpl implements UserService {
     }
 
     //修改密碼並判斷token是否過期或無效
+    @RequiredLog("修改密碼並判斷token是否過期或無效")
     @Override
     public JsonResult getResetPwd(UserDTO userDto) {
         String reset_token = userDto.getResetToken();

@@ -1,6 +1,6 @@
 package com.example.mall.controller;
 
-import com.example.mall.entity.Products;
+import com.example.mall.pojo.entity.Products;
 import com.example.mall.response.JsonResult;
 import com.example.mall.service.Impl.ProductsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;

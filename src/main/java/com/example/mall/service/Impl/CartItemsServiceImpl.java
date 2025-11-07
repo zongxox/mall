@@ -1,13 +1,14 @@
 package com.example.mall.service.Impl;
 
-import com.example.mall.dto.CartItemsDTO;
-import com.example.mall.entity.CartItems;
+import com.example.mall.aop.RequiredLog;
+import com.example.mall.pojo.dto.CartItemsDTO;
+import com.example.mall.pojo.entity.CartItems;
 import com.example.mall.mapper.CartItemsMapper;
 import com.example.mall.response.JsonResult;
 import com.example.mall.response.StatusCode;
 import com.example.mall.service.CartItemsService;
-import com.example.mall.vo.CartItemsVO;
-import com.example.mall.vo.UserVO;
+import com.example.mall.pojo.vo.CartItemsVO;
+import com.example.mall.pojo.vo.UserVO;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ public class CartItemsServiceImpl implements CartItemsService {
     @Autowired
     private CartItemsMapper cartItemsMapper;
     //加入購物車表中
+    @RequiredLog("加入購物車表中")
     @Override
     public JsonResult insertCart(CartItemsDTO cartItemsDTO, HttpSession session) {
         UserVO sessionVO = (UserVO)session.getAttribute("sessionVO");
@@ -43,6 +45,7 @@ public class CartItemsServiceImpl implements CartItemsService {
 
 
     //透過登入狀態的userid顯示購物車商品
+    @RequiredLog("透過登入狀態的userid顯示購物車商品")
     @Override
     public JsonResult selectByUserId(HttpSession session) {
         UserVO sessionVO = (UserVO) session.getAttribute("sessionVO");
@@ -57,6 +60,7 @@ public class CartItemsServiceImpl implements CartItemsService {
     }
 
     //刪除購物車商品
+    @RequiredLog("刪除購物車商品")
     @Override
     public JsonResult deleteCart(CartItemsDTO cartItemsDTO,HttpSession session) {
         UserVO sessionVo = (UserVO) session.getAttribute("sessionVO");
@@ -72,6 +76,7 @@ public class CartItemsServiceImpl implements CartItemsService {
     }
 
     //按購物車結帳後,修改購物車表中數量,跳轉到配送資訊顯示
+    @RequiredLog("按購物車結帳後,修改購物車表中數量,跳轉到配送資訊顯示")
     @Override
     public JsonResult updateCart(CartItemsDTO cartItemsDTO, HttpSession session) {
         UserVO sessionVO = (UserVO) session.getAttribute("sessionVO");

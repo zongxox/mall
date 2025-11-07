@@ -263,3 +263,20 @@ CREATE TABLE order_items (
     FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
     FOREIGN KEY (product_variant_id) REFERENCES product_variants(id) ON DELETE CASCADE
 ) CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT='訂單明細表';
+
+---AOP用戶日誌
+CREATE TABLE log (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '用戶id',
+    ip VARCHAR(50) NOT NULL COMMENT '用戶ip',
+    username VARCHAR(50) NOT NULL COMMENT '用戶名稱',
+
+    created_time DATETIME NOT NULL COMMENT '創建時間',
+
+    operation VARCHAR(255) COMMENT '操作的方法',
+    method VARCHAR(255) COMMENT '方法名稱',
+    params TEXT COMMENT '傳遞的參數',
+
+    time BIGINT COMMENT '執行時間(毫秒)',
+    status INT COMMENT '執行狀態 1成功 0失敗',
+    error TEXT COMMENT '錯誤訊息'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='系統操作日誌';

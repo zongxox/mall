@@ -1,4 +1,4 @@
-package com.example.mall.entity;
+package com.example.mall.pojo.entity;
 
 import lombok.Data;
 

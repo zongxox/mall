@@ -1,7 +1,7 @@
 package com.example.mall.mapper;
 
-import com.example.mall.dto.UserDTO;
-import com.example.mall.entity.User;
+import com.example.mall.pojo.dto.UserDTO;
+import com.example.mall.pojo.entity.User;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.time.LocalDateTime;

@@ -1,6 +1,6 @@
 package com.example.mall.controller;
 
-import com.example.mall.dto.CartItemsDTO;
+import com.example.mall.pojo.dto.CartItemsDTO;
 import com.example.mall.response.JsonResult;
 import com.example.mall.service.Impl.CartItemsServiceImpl;
 import jakarta.servlet.http.HttpSession;

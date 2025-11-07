@@ -1,7 +1,7 @@
 package com.example.mall.service;
 
 
-import com.example.mall.entity.Products;
+import com.example.mall.pojo.entity.Products;
 import com.example.mall.response.JsonResult;
 
 

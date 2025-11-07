@@ -5,7 +5,7 @@
 <mapper namespace="com.example.mall.mapper.ProductsMapper">
 
     <!--動態查詢全部商品-->
-    <select id="selectProductsAll" resultType="com.example.mall.entity.Products">
+    <select id="selectProductsAll" resultType="com.example.mall.pojo.entity.Products">
         SELECT id,
                name,
                description,
@@ -19,7 +19,7 @@
     </select>
 
     <!--基於id查詢商品資訊-->
-    <select id="selectProducts" resultType="com.example.mall.entity.Products">
+    <select id="selectProducts" resultType="com.example.mall.pojo.entity.Products">
         SELECT id,
                name,
                description,
@@ -34,7 +34,7 @@
     </select>
 
     <!--查詢庫存顏色尺寸-->
-    <select id="selectProductsVariant" resultType="com.example.mall.entity.ProductVariant">
+    <select id="selectProductsVariant" resultType="com.example.mall.pojo.entity.ProductVariant">
         SELECT id, product_id, color, size, stock, created_time
         FROM product_variants
         WHERE product_id = #{productId}

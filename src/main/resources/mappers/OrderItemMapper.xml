@@ -10,7 +10,7 @@
     </insert>
 
     <!--基於訂單id找到該用戶所有訂單明細-->
-    <select id="userByOrderId" resultType="com.example.mall.entity.OrderItem">
+    <select id="userByOrderId" resultType="com.example.mall.pojo.entity.OrderItem">
         SELECT id, order_id, product_variant_id, quantity, price
         FROM order_items
         WHERE order_id = #{orderId}

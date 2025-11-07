@@ -1,6 +1,6 @@
 package com.example.mall.Filter;
 
-import com.example.mall.vo.UserVO;
+import com.example.mall.pojo.vo.UserVO;
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;
@@ -9,7 +9,7 @@ import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 
-@WebFilter(filterName = "loginFilter",urlPatterns = {"/user.html","/cart.html","/payment_confirm3.html","/credit-card-payment.html"})
+@WebFilter(filterName = "loginFilter",urlPatterns = {"/user.html","/cart.html","/payment_confirm3.html","/credit-card-payment.html","/order.html"})
 public class LoginFilter implements Filter {
 
     @Override

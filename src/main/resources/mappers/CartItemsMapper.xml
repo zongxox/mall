@@ -26,7 +26,7 @@
                  LEFT JOIN products p ON p.id = pv.product_id
         WHERE c.user_id = #{userId}
     </select>
-    <resultMap id="CartItemMap" type="com.example.mall.vo.CartItemsVO">
+    <resultMap id="CartItemMap" type="com.example.mall.pojo.vo.CartItemsVO">
         <id column="cart_item_id" property="cartItemId"></id>
         <result column="quantity" property="quantity"></result>
         <result column="product_id" property="productId"></result>

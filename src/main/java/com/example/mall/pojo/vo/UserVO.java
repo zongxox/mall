@@ -1,4 +1,4 @@
-package com.example.mall.vo;
+package com.example.mall.pojo.vo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;

@@ -6,6 +6,7 @@
   <meta http-equiv="Cache-Control" content="no-store" />
   <title>管理訂單</title>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="js/header.js"></script>
   <style>
     :root{
       --bg:#0f1220; --panel:#161a2f; --text:#e9eef7; --muted:#b6bdd1;
@@ -108,9 +109,8 @@
   </style>
 </head>
 <body>
+<header id="site-header"></header>
 <div class="shell">
-  <!-- 側邊欄（如需） -->
-  <div id="header-container"></div>
 
   <!-- 訂單管理列表 -->
   <section id="order-management" class="panel">
@@ -118,12 +118,6 @@
       <h2 class="panel-title">訂單管理</h2>
       <span id="order-list-status" class="muted"></span>
     </header>
-
-    <div class="controls" style="margin-bottom:12px;">
-      <input id="orderSearchInput" class="input" type="text" placeholder="請輸入訂單編號" />
-      <button id="orderSearchBtn" class="btn">查詢</button>
-      <span class="hint">可直接輸入完整訂單編號查詢</span>
-    </div>
 
     <div class="table-wrap">
       <table class="table orders-table">
@@ -136,7 +130,6 @@
           <th>收件電話</th>
           <th>總金額</th>
           <th>狀態</th>
-          <th>操作</th>
         </tr>
         </thead>
         <tbody></tbody>
@@ -181,7 +174,58 @@
 </div>
 
 <script>
+  $(function () {
 
+    //一進頁面就載入訂單
+    loadOrders();
+
+    function loadOrders() {
+
+      const $tbody = $(".orders-table tbody");
+      $tbody.html(`<tr><td colspan="8">載入中...</td></tr>`);
+
+      $.ajax({
+        url: "/order/allOrders",
+        type: "GET",
+        dataType: "json",
+        success: function (res) {
+
+          if (!res || res.code !== 200 || !Array.isArray(res.data)) {
+            $tbody.html(`<tr><td colspan="8">載入失敗或沒有訂單資料</td></tr>`);
+            return;
+          }
+
+          if (res.data.length === 0) {
+            $tbody.html(`<tr><td colspan="8">目前沒有任何訂單</td></tr>`);
+            return;
+          }
+
+          $tbody.empty(); // 清空原本內容
+
+          res.data.forEach(o => {
+            const tr = `
+                        <tr>
+                            <td>${o.id}</td>
+                            <td>${o.user_id}</td>
+                            <td>${o.created_time}</td>
+                            <td>${o.recipient_address || ""}</td>
+                            <td>${o.recipient_phone || ""}</td>
+                            <td>NT$${o.total_amount}</td>
+                            <td>${o.status}</td>
+                            <td>-</td>
+                        </tr>
+                    `;
+            $tbody.append(tr);
+          });
+        },
+        error: function () {
+          $tbody.html(`<tr><td colspan="8">系統錯誤，無法載入</td></tr>`);
+        }
+      });
+    }
+
+  });
 </script>
+
 </body>
 </html>

@@ -2,9 +2,10 @@ package com.example.mall.service.Impl;
 
 
 
-import com.example.mall.dto.OrderDTO;
-import com.example.mall.entity.Order;
-import com.example.mall.entity.OrderItem;
+import com.example.mall.aop.RequiredLog;
+import com.example.mall.pojo.dto.OrderDTO;
+import com.example.mall.pojo.entity.Order;
+import com.example.mall.pojo.entity.OrderItem;
 import com.example.mall.mapper.CartItemsMapper;
 import com.example.mall.mapper.OrderItemMapper;
 import com.example.mall.mapper.OrderMapper;
@@ -12,8 +13,8 @@ import com.example.mall.mapper.ProductVariantMapper;
 import com.example.mall.response.JsonResult;
 import com.example.mall.response.StatusCode;
 import com.example.mall.service.OrderService;
-import com.example.mall.vo.CartItemsVO;
-import com.example.mall.vo.UserVO;
+import com.example.mall.pojo.vo.CartItemsVO;
+import com.example.mall.pojo.vo.UserVO;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -34,6 +36,7 @@ public class OrderServiceImpl implements OrderService {
     private ProductVariantMapper productVariantMapper;
 
     //新增用戶配送資訊
+    @RequiredLog("新增用戶配送資訊")
     @Override
     public JsonResult insertOrder(OrderDTO orderDTO, HttpSession session) {
         UserVO sessionVO = (UserVO) session.getAttribute("sessionVO");
@@ -71,6 +74,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     //用戶付款（更新訂單狀態＋扣庫存）
+    @RequiredLog("用戶付款")
     @Override
     public JsonResult payOrder(Integer orderId, HttpSession session) {
 
@@ -120,5 +124,12 @@ public class OrderServiceImpl implements OrderService {
             return new JsonResult(StatusCode.ORDER_STATUS_CONFLICT, "訂單狀態更新失敗");
         }
         return JsonResult.ok("付款成功");
+    }
+
+    //會員中心用戶的全部訂單
+    @RequiredLog("會員中心用戶的全部訂單")
+    @Override
+    public List<Map<String, Object>> getAllOrders() {
+        return orderMapper.selectAllOrders();
     }
 }

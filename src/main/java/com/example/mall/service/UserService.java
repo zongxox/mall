@@ -1,6 +1,6 @@
 package com.example.mall.service;
 
-import com.example.mall.dto.UserDTO;
+import com.example.mall.pojo.dto.UserDTO;
 import com.example.mall.response.JsonResult;
 import jakarta.servlet.http.HttpSession;
 
